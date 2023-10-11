@@ -1,0 +1,40 @@
+nav {
+  background-color: #2D2E32;
+  display: flex;
+  justify-content: center;
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    flex-wrap: wrap;
+    height: 80px;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .logo {
+    display: flex;
+
+    .logo-seat {
+      font-weight: 600;
+      color: white;
+    }
+
+    .logo-savvy {
+      font-weight: 400;
+      color: #FFD740;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin: 0 40px;
+
+    a {
+      color: white;
+    }
+  }
+}

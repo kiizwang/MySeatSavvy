@@ -1,0 +1,17 @@
+footer {
+  background-color: #2D2E32;
+  display: flex;
+  justify-content: center;
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    height: 48px;
+    width: 100%;
+    max-width: 1200px;
+    font-size: 0.8rem;
+    color: grey;
+  }
+}

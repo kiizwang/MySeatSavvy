@@ -1,0 +1,38 @@
+main {
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px 0;
+  display: grid;
+  grid-template-rows: 320px auto;
+  grid-template-columns: auto 400px;
+  grid-template-areas: "banner banner"
+    "content sidebar";
+  grid-gap: 40px;
+
+  &>div {
+    padding: 40px;
+    border-radius: 8px;
+  }
+
+  .banner {
+    grid-area: banner;
+    background-color: white;
+  }
+
+  .content {
+    grid-area: content;
+    background-color: white;
+
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+    background-color: white;
+
+  }
+}
