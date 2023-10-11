@@ -1,0 +1,27 @@
+# Dependency directories
+node_modules/
+build/
+dist/
+coverage/
+
+# Environment files
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE and code editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+Desktop.ini
