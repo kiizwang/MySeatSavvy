@@ -26,6 +26,7 @@ ul {
 
 a {
   text-decoration: none;
+  color: #FF6F00;
 }
 
 #root {
@@ -36,4 +37,5 @@ a {
 
 @import "./nav";
 @import "./main";
+@import "./intro";
 @import "./footer";

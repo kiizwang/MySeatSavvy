@@ -25,6 +25,7 @@ ul {
 
 a {
   text-decoration: none;
+  color: #FF6F00;
 }
 
 #root {
@@ -98,6 +99,45 @@ main {
 .main .sidebar {
   grid-area: sidebar;
   background-color: white;
+}
+
+.restaurant-info-wrapping,
+.restaurant-content-wrapping,
+.restaurant-menu-wrapping {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 1.5rem 0.5rem;
+  border-bottom: 1px solid #E0E0E0;
+}
+.restaurant-info-wrapping .icon-p-wrapper,
+.restaurant-content-wrapping .icon-p-wrapper,
+.restaurant-menu-wrapping .icon-p-wrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  color: #212121;
+}
+.restaurant-info-wrapping .icon-p-wrapper .icon-wrapper,
+.restaurant-content-wrapping .icon-p-wrapper .icon-wrapper,
+.restaurant-menu-wrapping .icon-p-wrapper .icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.restaurant-info-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined,
+.restaurant-content-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined,
+.restaurant-menu-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 20;
+}
+
+.restaurant-content-wrapping {
+  line-height: 1.5rem;
+}
+
+.restaurant-menu-wrapping {
+  border-bottom: none;
 }
 
 footer {
