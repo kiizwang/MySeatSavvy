@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import Banner from "../components/Banner.js";
 
 const Intro = () => {
 
   const [restaurant, setRestaurant] = useState(null);
-  useEffect(() => {
-    axios
-      .get("/api/restaurants")
-      .then((response) => {
-        setRestaurant(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-  if (!restaurant) return <div>Loading...</div>;
+
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/restaurants")
+  //     .then((response) => {
+  //       setRestaurant(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }, []);
+
+  // if (!restaurant) return <div>Loading...</div>;
 
   return (
     <main>
