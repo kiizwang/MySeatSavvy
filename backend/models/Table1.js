@@ -15,7 +15,7 @@ const tableSchema = new Schema(
       booked_date: {
         type: Date,
       },
-      booked_time: [],
+      booked_time: [{ type: String }],
     },
   },
   {

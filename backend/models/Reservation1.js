@@ -24,7 +24,7 @@ const reservationSchema = new Schema(
       required: true,
     },
     date: {
-      type: String,
+      type: Date,
       trim: true,
     },
     time: {
