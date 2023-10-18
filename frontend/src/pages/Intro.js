@@ -20,6 +20,22 @@ const Intro = () => {
 
   // if (!restaurant) return <div>Loading...</div>;
 
+  useEffect(() => {
+    fetch("/api/restaurants")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setRestaurant(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <main>
       <div className="main">
