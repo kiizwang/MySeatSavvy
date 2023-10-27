@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Banner from "../components/Banner.js";
 
 const Intro = () => {
-
   const [restaurant, setRestaurant] = useState(null);
 
   // useEffect(() => {

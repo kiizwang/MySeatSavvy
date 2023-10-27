@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 // Importing routes
 const customerRouter = require('./routes/customers');
@@ -12,7 +12,7 @@ const menuRouter = require('./routes/menu');
 const reservationsRouter = require('./routes/reservations');
 const tableRouter = require('./routes/tables');
 
-// Connect to MongoDB 
+// Connect to MongoDB
 mongoose.connect('mongodb+srv://seatsavvy:A6otj4M@cluster0.8vmqele.mongodb.net/seatsavvy-db?retryWrites=true&w=majority');
 
 mongoose.connection.on('error', (error) => console.error('MongoDB connection error:', error));

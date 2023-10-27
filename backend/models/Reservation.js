@@ -1,17 +1,48 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const reservationSchema = new mongoose.Schema({
-  name:  { type: String, required: true },
-  address:  { type: String, required: true },
-  phone: { type: String, required: true },
-  description: { type: String },
-  working_hours: { type: String},
-  menu: { type: String, required: true },
-  number_of_tables: { type: String, required: true }
-});
+const reservationSchema = new Schema(
+  {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    note: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: Date,
+      trim: true,
+    },
+    time: {
+      type: String,
+      trim: true,
+    },
+    restaurant_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Restaurant",
+    },
+    table_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Table",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-// Link the Schema with the collection
-const Reservation = mongoose.model('Reservation', reservationSchema); 
-
-module.exports = Reservation;
+module.exports = mongoose.model("Reservation", reservationSchema);
