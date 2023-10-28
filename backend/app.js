@@ -13,7 +13,8 @@ const reservationsRouter = require('./routes/reservations');
 const tableRouter = require('./routes/tables');
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://seatsavvy:A6otj4M@cluster0.8vmqele.mongodb.net/seatsavvy-db?retryWrites=true&w=majority');
+// mongoose.connect('mongodb+srv://seatsavvy:A6otj4M@cluster0.8vmqele.mongodb.net/seatsavvy-db?retryWrites=true&w=majority');
+mongoose.connect("mongodb+srv://admin:admin@cluster0.zhseqff.mongodb.net/seatsavvy?retryWrites=true&w=majority");
 
 mongoose.connection.on('error', (error) => console.error('MongoDB connection error:', error));
 mongoose.connection.once('open', () => console.log('Connected to MongoDB'));
