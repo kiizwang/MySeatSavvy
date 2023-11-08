@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
 
-const Banner = () => {
+const Banner = ({ bannerImage }) => {
+  if (!bannerImage) {
+    return null;
+  }
+
+  const backgroundImage = `url(/images/${bannerImage})`;
+
   return (
-    <div className='banner'>This is a Banner.</div>
-  )
-}
+    <div className="banner" style={{ backgroundImage: backgroundImage }}>
+    </div>
+  );
+};
 
-export default Banner
+export default Banner;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { Link } from "react-router-dom";
 import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
@@ -7,28 +9,40 @@ const Intro = () => {
   const currentDate = new Date().toLocaleDateString("en-CA"); // format: 2023-11-05
   const currentTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }); // format: 14:24
 
-  const [restaurants, setRestaurants] = useState([]);
+  // const [restaurants, setRestaurants] = useState([]); // no need since using Redux
   const [partyMaxSizeOptions, setPartyMaxSizeOptions] = useState([]);
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [reservationTimes, setReservationTimes] = useState([]);
 
-  // Restaurant
+  // Redux
+  const dispatch = useDispatch();
+  const restaurants = useSelector((state) => state.restaurants.entities);
+  const restaurantsStatus = useSelector((state) => state.restaurants.status);
+  const restaurantsError = useSelector((state) => state.restaurants.error);
+
   useEffect(() => {
-    fetch("/restaurants") // with backend proxy in package.json
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setRestaurants(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    setSelectedDate(currentDate);
-  }, []);
+    if (restaurantsStatus === "idle") {
+      dispatch(fetchRestaurants());
+    }
+  }, [restaurantsStatus, dispatch]);
+
+  // Restaurant
+  // useEffect(() => {
+  //   fetch("/restaurants") // with backend proxy in package.json
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setRestaurants(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  //   setSelectedDate(currentDate);
+  // }, []);
 
   // Party Size
   useEffect(() => {
@@ -110,7 +124,7 @@ const Intro = () => {
   return (
     <main>
       <div className="main">
-        <Banner />
+        <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
         <div className="content">
           <section className="restaurant-info">
             <h1>{restaurants.length > 0 ? restaurants[0].name : "Loading..."}</h1>
@@ -206,8 +220,8 @@ const Intro = () => {
                   <input type="submit" value="Submit" className="btn btn-warning" />
                 </div>
                 <div>
-                  When the time dropdown is greyed out, it means that it's either fully booked or the
-                  restaurant is closed on that day. Please select other dates.
+                  When the time dropdown is greyed out, it means that it's either fully booked or the restaurant is
+                  closed on that day. Please select other dates.
                 </div>
               </form>
             </div>

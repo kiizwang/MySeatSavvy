@@ -107,6 +107,9 @@ main {
 .main .banner {
   grid-area: banner;
   background-color: white;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 .main .content {
   grid-area: content;

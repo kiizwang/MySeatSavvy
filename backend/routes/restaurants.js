@@ -15,6 +15,7 @@ router.get('/create-sample', async (req, res) => {
         "With a unique, inventive menu, The Rich Uncle Tavern is built on hearty live-fire fare and shareable snacks that pay homage to the brasseries and taverns of yesteryear. Defined by our humble and wholesome approach to food and beverage, The Rich Uncle Tavern features a charming and homely ambience for patrons to gather with old friends and find some new ones.",
         "Whether you’re partaking in a crafted cocktail during live music or a late-night bite in one of our booths, you’ll be able to experience a sociable atmosphere, curated beverages and delicious fare that will leave you sated.",
       ],
+      banner_image: "The_Rich_Uncle_Tavern.jpg",
       days: [
         {
           day: "Sunday",

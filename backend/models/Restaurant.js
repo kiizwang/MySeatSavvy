@@ -38,6 +38,10 @@ const restaurantSchema = new Schema(
       type: [String],
       required: true,
     },
+    banner_image: {
+      type: String,
+      required: true,
+    },
     days: [
       {
         day: {
