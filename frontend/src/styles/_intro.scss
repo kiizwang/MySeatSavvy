@@ -1,3 +1,4 @@
+// Content
 .restaurant-info-wrapping,
 .restaurant-content-wrapping,
 .restaurant-menu-wrapping {
@@ -37,4 +38,42 @@
 
 .restaurant-menu-wrapping {
   border-bottom: none;
+}
+
+// Sidebar -----
+
+.sidebar section:first-of-type {
+  border-bottom: 1px solid #E0E0E0;
+  margin-bottom: 1.5rem;
+}
+
+.reservation-info>h2,
+.restaurant-hours>h2 {
+  text-align: center;
+}
+
+.reservation-info-wrapping {
+  padding: 1.5rem 0;
+
+  .reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    div:last-child {
+      font-size: 0.875rem;
+      padding: 0 1rem;
+      color: #757575;
+    }
+  }
+}
+
+.restaurant-hours-wrapping {
+  padding: 1rem 1rem 0;
+  font-size: 0.875rem;
+  line-height: 2rem;
+
+  table td:first-of-type {
+    width: 50%;
+  }
 }

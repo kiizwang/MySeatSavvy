@@ -1,6 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const timeSlotSchema = new Schema({
+  start: {
+    type: String,
+    required: true,
+  },
+  end: {
+    type: String,
+    required: true,
+  },
+});
+
 const restaurantSchema = new Schema(
   {
     name: {
@@ -24,10 +35,25 @@ const restaurantSchema = new Schema(
       required: true,
     },
     description: {
-      type: String,
+      type: [String],
       required: true,
     },
-    party_max_size: {
+    days: [
+      {
+        day: {
+          type: String,
+          required: true,
+          enum: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        },
+        status: {
+          type: String,
+          enum: ["Open", "Closed"],
+          required: true,
+        },
+        time_slots: [timeSlotSchema],
+      },
+    ],
+    max_party_size: {
       type: Number,
       required: true,
     },

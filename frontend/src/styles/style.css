@@ -13,10 +13,26 @@ h2,
 h3,
 button {
   font-family: "Playfair Display", "Noto Serif", "Times New Roman", Times, serif;
+  font-weight: 600;
 }
 
 h1 {
   font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+.table {
+  margin-bottom: 0;
 }
 
 ul {
@@ -138,6 +154,39 @@ main {
 
 .restaurant-menu-wrapping {
   border-bottom: none;
+}
+
+.sidebar section:first-of-type {
+  border-bottom: 1px solid #E0E0E0;
+  margin-bottom: 1.5rem;
+}
+
+.reservation-info > h2,
+.restaurant-hours > h2 {
+  text-align: center;
+}
+
+.reservation-info-wrapping {
+  padding: 1.5rem 0;
+}
+.reservation-info-wrapping .reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.reservation-info-wrapping .reservation-form div:last-child {
+  font-size: 0.875rem;
+  padding: 0 1rem;
+  color: #757575;
+}
+
+.restaurant-hours-wrapping {
+  padding: 1rem 1rem 0;
+  font-size: 0.875rem;
+  line-height: 2rem;
+}
+.restaurant-hours-wrapping table td:first-of-type {
+  width: 50%;
 }
 
 footer {

@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
+const cors = require("cors"); // for frontend proxy
 const PORT = 4000;
 
 // Importing routes
@@ -21,6 +22,7 @@ mongoose.connection.once('open', () => console.log('Connected to MongoDB'));
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors()); // for frontend proxy
 
 // Routes
 app.get('/', (req, res) => res.send('Welcome to the SeatSavvy Backend!!!'));
