@@ -42,7 +42,6 @@ const Intro = () => {
     if (restaurants.length > 0 && tables.length > 0) {
       const targetRestaurantId = restaurants[0]._id;
       const restaurantTables = tables.filter((table) => table.restaurant_id?._id === targetRestaurantId);
-      console.log(restaurantTables);
     }
   }, [restaurants, tables]);
 
@@ -92,7 +91,7 @@ const Intro = () => {
   //     if (dayInfo && dayInfo.status === "Open") {
   //       let times = [];
 
-  //       for (let timeSlot of dayInfo.time_slots) {
+  //       for (let timeSlot of dayInfo.hour_ranges) {
   //         let startTime = timeSlot.start.split(":"); // split the start time into [hour, minute]
   //         let endTime = timeSlot.end.split(":"); // split the end time into [hour, minute]
   //         // let currentDateObj = new Date();
@@ -144,7 +143,7 @@ const Intro = () => {
 
   // Date & Time version 2
   useEffect(() => {
-    if (restaurants.length > 0 && tables.length > 0 && selectedDate) {
+    if (restaurants.length > 0 && tables.length > 0 && selectedDate && selectedPartySize) {
       const date = moment(selectedDate);
       const dayName = date.format("dddd");
       const dayInfo = restaurants[0].days.find((d) => d.day === dayName);
@@ -155,23 +154,48 @@ const Intro = () => {
         return;
       }
 
-      // 獲取該日期所有可用桌子
-      //
-
-      let times = [];
-      for (let timeSlot of dayInfo.time_slots) {
+      // 所有的時間選項
+      let allTimeSlots = [];
+      for (let timeSlot of dayInfo.hour_ranges) {
         let startTime = moment(timeSlot.start, "HH:mm");
         let endTime = moment(timeSlot.end, "HH:mm");
 
         while (startTime.isBefore(endTime)) {
-          times.push(startTime);
+          allTimeSlots.push(startTime.format("HH:mm"));
           startTime.add(1, "hours");
         }
       }
-      console.log(times);
 
-      // setReservationTimesOptions(times);
-      // console.log(reservationTimesOptions);
+      // 獲取所有還可被預訂的桌子：
+      // 1. 當tables的桌子的booked_date_time的booked_date等於selectedDate，則檢查booked_time_slots的length是否小於allTimeSlots的length，即代表該日期還有能被預訂的時間。
+      // 2. 當tables的桌子的booked_date_time的booked_date沒有包含到selectedDate，則代表是可被預訂的桌子。
+      const availableTables = tables.filter((table) => {
+        const bookedDate = table.booked_date_time.find((b) => moment(b.booked_date).isSame(selectedDate, "day"));
+        return !bookedDate || (bookedDate && bookedDate.booked_time_slots.length < allTimeSlots.length);
+      });
+
+      // 根據選擇的人數過濾桌子
+      const filteredTables = availableTables.filter((table) => table.max_table_capacity >= selectedPartySize);
+
+      // 創建時間選項：
+      // 1. 當filteredTables的桌子的booked_date_time的booked_date等於selectedDate：如果filteredTables中的“所有桌子”的booked_date_time的booked_time_slots都包含該時間（例如：11:00），則不能渲染該時間選項出來（11:00），否則可以渲染出該時間選項出來（11:00）。
+      // 2. 當tables的桌子的booked_date_time的booked_date沒有包含到selectedDate，則代表是可被預訂的桌子，則可以渲染出該時間選項出來（11:00）。
+      let times = [];
+      allTimeSlots.forEach((timeSlot) => {
+        // 檢查每個時間段是否至少有一個桌子在該時段是空閒的
+        const isTimeSlotAvailable = filteredTables.some((table) => {
+          const bookedDate = table.booked_date_time.find((b) => moment(b.booked_date).isSame(selectedDate, "day"));
+          return !bookedDate || !bookedDate.booked_time_slots.includes(timeSlot);
+        });
+
+        // 如果至少有一個桌子在該時段是空閒的，則將該時間加入可預訂的時間列表中
+        if (isTimeSlotAvailable) {
+          times.push(timeSlot);
+        }
+      });
+      console.log("times: " + times);
+
+      setReservationTimesOptions(times);
     }
   }, [restaurants, tables, selectedDate, selectedPartySize]);
 

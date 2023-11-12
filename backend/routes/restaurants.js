@@ -20,7 +20,7 @@ router.get('/create-restaurant-sample', async (req, res) => {
         {
           day: "Sunday",
           status: "Open",
-          time_slots: [
+          hour_ranges: [
             { start: "11:00", end: "15:00" },
             { start: "17:30", end: "22:30" },
           ],
@@ -28,7 +28,7 @@ router.get('/create-restaurant-sample', async (req, res) => {
         {
           day: "Monday",
           status: "Open",
-          time_slots: [
+          hour_ranges: [
             { start: "11:00", end: "15:00" },
             { start: "17:30", end: "22:30" },
           ],
@@ -36,17 +36,17 @@ router.get('/create-restaurant-sample', async (req, res) => {
         {
           day: "Tuesday",
           status: "Closed",
-          time_slots: [],
+          hour_ranges: [],
         },
         {
           day: "Wednesday",
           status: "Closed",
-          time_slots: [],
+          hour_ranges: [],
         },
         {
           day: "Thursday",
           status: "Open",
-          time_slots: [
+          hour_ranges: [
             { start: "11:00", end: "15:00" },
             { start: "17:30", end: "22:30" },
           ],
@@ -54,7 +54,7 @@ router.get('/create-restaurant-sample', async (req, res) => {
         {
           day: "Friday",
           status: "Open",
-          time_slots: [
+          hour_ranges: [
             { start: "11:00", end: "15:00" },
             { start: "17:30", end: "22:30" },
           ],
@@ -62,7 +62,7 @@ router.get('/create-restaurant-sample', async (req, res) => {
         {
           day: "Saturday",
           status: "Open",
-          time_slots: [
+          hour_ranges: [
             { start: "11:00", end: "15:00" },
             { start: "17:30", end: "22:30" },
           ],

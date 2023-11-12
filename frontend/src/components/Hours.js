@@ -19,7 +19,7 @@ const Hours = ({ restaurants }) => {
               restaurants[0].days.map((dayInfo) => (
                 <React.Fragment key={dayInfo.day}>
                   {dayInfo.status === "Open" ? (
-                    dayInfo.time_slots.map((slot, index) => (
+                    dayInfo.hour_ranges.map((slot, index) => (
                       <tr key={index}>
                         {index === 0 && <td>{dayInfo.day}</td>}
                         {index !== 0 && <td></td>}

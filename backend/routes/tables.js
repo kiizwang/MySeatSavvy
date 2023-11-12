@@ -25,7 +25,7 @@ router.get("/create-table-sample", async (req, res) => {
       booked_date_time: [
         {
           booked_date: new Date("2023-11-13"),
-          booked_time_slots: ["11:00", "12:00"],
+          booked_time_slots: ["11:00"],
         },
       ],
       restaurant_id: new mongoose.Types.ObjectId("654b0220c92939bf72348ab0"),
@@ -37,7 +37,7 @@ router.get("/create-table-sample", async (req, res) => {
       booked_date_time: [
         {
           booked_date: new Date("2023-11-13"),
-          booked_time_slots: ["11:00"],
+          booked_time_slots: ["11:00", "12:00", "13:00", "14:00", "17:30", "18:30", "19:30", "20:30", "21:30"],
         },
       ],
       restaurant_id: new mongoose.Types.ObjectId("654b0220c92939bf72348ab0"),

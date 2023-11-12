@@ -54,7 +54,7 @@ const restaurantSchema = new Schema(
           enum: ["Open", "Closed"],
           required: true,
         },
-        time_slots: [timeSlotSchema],
+        hour_ranges: [timeSlotSchema],
       },
     ],
     max_party_size: {
