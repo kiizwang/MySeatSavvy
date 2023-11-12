@@ -7,22 +7,21 @@ const tableSchema = new Schema(
       type: String,
       required: true,
     },
-    max_capacity: {
+    max_table_capacity: {
       type: Number,
       required: true,
     },
     booked_date_time: [
+      // array of booked date and time slots
       {
         booked_date: {
           // booked date
           type: Date,
         },
         booked_time_slots: [
+          // array of booked time slots
           {
-            booked_time: {
-              // array of booked time slot
-              type: String,
-            },
+            type: String,
           },
         ],
       },
@@ -32,7 +31,7 @@ const tableSchema = new Schema(
       ref: "Restaurant",
     },
     reservation_id: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: "Reservation",
     },
   },

@@ -3,9 +3,9 @@ const router = express.Router();
 const Restaurant = require('../models/Restaurant');
 
 // For creating restaurant data
-// http://localhost:4000/restaurants/create-sample
-router.get('/create-sample', async (req, res) => {
-    const sampleData = {
+// http://localhost:4000/restaurants/create-restaurant-sample
+router.get('/create-restaurant-sample', async (req, res) => {
+    const sampleRestaurantData = {
       name: "The Rich Uncle Tavern",
       type: "Gastro Pub, Canadian, Burgers",
       payments: "Credit Card, Mastercard, UnionPay via TheFork Pay, Visa",
@@ -72,7 +72,7 @@ router.get('/create-sample', async (req, res) => {
       table_id: null,
     };
     try {
-        const newRestaurant = new Restaurant(sampleData);
+        const newRestaurant = new Restaurant(sampleRestaurantData);
         const savedRestaurant = await newRestaurant.save();
         res.json(savedRestaurant);
     } catch (err) {
