@@ -5,11 +5,11 @@ const Nav = () => {
   return (
     <nav>
       <div className="nav">
-        <div className="logo">
+        <NavLink to="/" className="logo">
           <h1 className="logo-seat">Seat</h1>
           <h1 className="logo-savvy">Savvy</h1>
-        </div>
-        <ul className="nav-links">
+        </NavLink>
+        {/* <ul className="nav-links">
           <li>
             <NavLink to="/" activeclassname="active">
               Home
@@ -20,7 +20,7 @@ const Nav = () => {
               About
             </NavLink>
           </li>
-        </ul>
+        </ul> */}
       </div>
     </nav>
   );

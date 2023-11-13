@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { fetchTables } from "../store/tablesSlice.js";
-import moment from "moment";
 import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 
@@ -16,7 +17,9 @@ const Intro = () => {
   const [selectedPartySize, setSelectedPartySize] = useState("");
   const [selectedDate, setSelectedDate] = useState(tomorrow);
   const [selectedTime, setSelectedTime] = useState("");
+  const [filteredTables, setFilteredTables] = useState([]);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  console.log(filteredTables);
 
   // Redux
   const dispatch = useDispatch();
@@ -96,7 +99,7 @@ const Intro = () => {
       const filteredTables = availableTables.filter(
         (table) => selectedPartySize >= table.table_capacity.min && selectedPartySize <= table.table_capacity.max
       );
-      console.log(filteredTables);
+      setFilteredTables(filteredTables);
 
       // Create new time options from allTimeSlots:
       // 1. When the booked_date_time of a table in filteredTables matches selectedDate: If all tables in "filteredTables" have their "booked_time_slots" containing a specific time (e.g., 11:00), that time slot should not be rendered, otherwise, it can be rendered (11:00 AM).
@@ -122,9 +125,22 @@ const Intro = () => {
     }
   }, [restaurants, restaurantTables, selectedDate, selectedPartySize]);
 
+  // Submit button's status
   useEffect(() => {
     setIsSubmitEnabled(selectedPartySize !== "" && selectedDate !== "" && selectedTime !== "");
   }, [selectedPartySize, selectedDate, selectedTime]);
+
+  // Navigation
+  const navigate = useNavigate();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSubmitEnabled) {
+      // Session Storage
+      sessionStorage.setItem('availableTables', JSON.stringify(filteredTables));
+      // Navigation to Seating page
+      navigate(`/seating?partySize=${selectedPartySize}&date=${selectedDate}&time=${selectedTime}`);
+    }
+  };
 
   const handlePartySizeChange = (e) => {
     setSelectedPartySize(e.target.value);
@@ -133,7 +149,9 @@ const Intro = () => {
     setSelectedDate(e.target.value);
   };
   const handleTimeChange = (e) => {
-    setSelectedTime(e.target.value);
+    const selectedTime = e.target.value;
+    const formattedTime = moment(selectedTime, "hh:mm A").format("HH:mm");
+    setSelectedTime(formattedTime);
   };
 
   return (
@@ -248,6 +266,7 @@ const Intro = () => {
                     type="submit"
                     value="Submit"
                     className={`btn btn-warning ${!isSubmitEnabled ? "disabled" : ""}`}
+                    onClick={handleSubmit}
                   />
                 </div>
                 <div>
