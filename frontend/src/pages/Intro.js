@@ -7,14 +7,14 @@ import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 
 const Intro = () => {
-  const currentDate = moment().format("YYYY-MM-DD"); // format: 2023-11-05
+  const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // format: 2023-11-05
 
   // const [restaurants, setRestaurants] = useState([]); // no need because using "Redux"
   const [restaurantTables, setRestaurantTables] = useState([]); // Get this restaurant's tables
   const [partyMaxSizeOptions, setPartyMaxSizeOptions] = useState([]);
   const [reservationTimesOptions, setReservationTimesOptions] = useState([]);
   const [selectedPartySize, setSelectedPartySize] = useState("");
-  const [selectedDate, setSelectedDate] = useState(currentDate);
+  const [selectedDate, setSelectedDate] = useState(tomorrow);
   const [selectedTime, setSelectedTime] = useState("");
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
 
@@ -306,7 +306,7 @@ const Intro = () => {
                     className="form-control"
                     value={selectedDate}
                     onChange={handleDateChange}
-                    min={new Date().toISOString().split("T")[0]}
+                    min={moment().add(1, "days").format("YYYY-MM-DD")}
                   />
                 </div>
                 {/* Time Slots */}
@@ -316,7 +316,7 @@ const Intro = () => {
                     className="form-select"
                     value={selectedTime}
                     onChange={handleTimeChange}
-                    disabled={selectedDate < currentDate || reservationTimesOptions.length === 0}
+                    disabled={reservationTimesOptions.length === 0}
                   >
                     <option value="">Choose Time</option>
                     {reservationTimesOptions.map((time, index) => (
