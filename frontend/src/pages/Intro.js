@@ -7,10 +7,10 @@ import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 
 const Intro = () => {
-  const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // format: 2023-11-05
+  const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // can only select date from tomorrow
 
   // const [restaurants, setRestaurants] = useState([]); // no need because using "Redux"
-  const [restaurantTables, setRestaurantTables] = useState([]); // Get this restaurant's tables
+  const [restaurantTables, setRestaurantTables] = useState([]); // get this restaurant's tables
   const [partyMaxSizeOptions, setPartyMaxSizeOptions] = useState([]);
   const [reservationTimesOptions, setReservationTimesOptions] = useState([]);
   const [selectedPartySize, setSelectedPartySize] = useState("");
@@ -39,6 +39,7 @@ const Intro = () => {
     }
   }, [tablesStatus, dispatch]);
 
+  // Restaurant's tables
   useEffect(() => {
     if (restaurants.length > 0 && tables.length > 0) {
       const targetRestaurantId = restaurants[0]._id;
@@ -47,25 +48,7 @@ const Intro = () => {
     }
   }, [restaurants, tables]);
 
-  // useEffect(() => {
-  //   fetch("/restaurants") // with backend proxy in package.json
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setRestaurants(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
-  //     });
-  //   setSelectedDate(currentDate);
-  // }, []);
-
-  // Party Size
-
+  // Party size options
   useEffect(() => {
     if (restaurants.length > 0) {
       const maxPartySize = restaurants[0].max_party_size;
@@ -77,85 +60,19 @@ const Intro = () => {
     }
   }, [restaurants]);
 
-  // Date & Time version 1
-  // useEffect(() => {
-  //   if (restaurants.length > 0 && selectedDate) {
-  //     const restaurant = restaurants[0];
-  //     // const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  //     // const date = new Date(selectedDate);
-  //     // const date = new Date(selectedDate + "T00:00:00Z");
-  //     const date = moment(selectedDate);
-  //     // const dayName = dayNames[date.getDay()];
-  //     // const dayName = dayNames[date.getUTCDay()];
-  //     const dayName = date.format("dddd");
-  //     const dayInfo = restaurant.days.find((d) => d.day === dayName);
-
-  //     if (dayInfo && dayInfo.status === "Open") {
-  //       let times = [];
-
-  //       for (let timeSlot of dayInfo.hour_ranges) {
-  //         let startTime = timeSlot.start.split(":"); // split the start time into [hour, minute]
-  //         let endTime = timeSlot.end.split(":"); // split the end time into [hour, minute]
-  //         // let currentDateObj = new Date();
-  //         // let startDateObj = new Date(
-  //         //   currentDateObj.getFullYear(),
-  //         //   currentDateObj.getMonth(),
-  //         //   currentDateObj.getDate(),
-  //         //   parseInt(startTime[0]),
-  //         //   parseInt(startTime[1])
-  //         // );
-  //         // let endDateObj = new Date(
-  //         //   currentDateObj.getFullYear(),
-  //         //   currentDateObj.getMonth(),
-  //         //   currentDateObj.getDate(),
-  //         //   parseInt(endTime[0]),
-  //         //   parseInt(endTime[1])
-  //         // );
-  //         let startDateObj = moment().set({ hour: parseInt(startTime[0]), minute: parseInt(startTime[1]) });
-  //         let endDateObj = moment().set({ hour: parseInt(endTime[0]), minute: parseInt(endTime[1]) });
-
-  //         while (startDateObj.isBefore(endDateObj)) {
-  //           // Format the time string as "HH:MM a.m./p.m."
-  //           // let timeString = startDateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
-  //           let timeString = startDateObj.format("hh:mm A");
-
-  //           // Only add times that are later than the current time if the selected date is today
-  //           if (selectedDate === currentDate) {
-  //             let currentTimeObj = new Date();
-  //             if (startDateObj > currentTimeObj) {
-  //               times.push(timeString);
-  //             }
-  //           } else {
-  //             times.push(timeString);
-  //           }
-
-  //           // Increment the time by 30 minutes
-  //           // startDateObj.setMinutes(startDateObj.getMinutes() + 30);
-  //           // Increment the time by 1 hour
-  //           // startDateObj.setHours(startDateObj.getHours() + 1);
-  //           startDateObj.add(1, "hours");
-  //         }
-  //       }
-  //       setReservationTimesOptions(times);
-  //     } else {
-  //       setReservationTimesOptions([]);
-  //     }
-  //   }
-  // }, [restaurants, selectedDate]);
-
-  // Date & Time version 2
+  // Date & Time
   useEffect(() => {
     if (restaurants.length > 0 && restaurantTables.length > 0 && selectedDate && selectedPartySize) {
       const date = moment(selectedDate);
       const dayName = date.format("dddd");
       const dayInfo = restaurants[0].days.find((d) => d.day === dayName);
 
-      // 如果選定的日期餐廳是關門的，則不顯示任何時間選項
+      // If the selected date is a day when the restaurant is closed, do not display any time options
       if (!dayInfo || dayInfo.status === "Closed") {
         setReservationTimesOptions([]);
         return;
       }
-      // 所有的時間選項
+      // All time slots
       let allTimeSlots = [];
       for (let timeSlot of dayInfo.hour_ranges) {
         let startTime = moment(timeSlot.start, "HH:mm");
@@ -167,32 +84,32 @@ const Intro = () => {
         }
       }
 
-      // 獲取所有還可被預訂的桌子：
-      // 1. 當tables的桌子的booked_date_time的booked_date等於selectedDate，則檢查booked_time_slots的length是否小於allTimeSlots的length，即代表該日期還有能被預訂的時間。
-      // 2. 當tables的桌子的booked_date_time的booked_date沒有包含到selectedDate，則代表是可被預訂的桌子。
+      // Get all tables that can be reserved:
+      // 1. When the booked_date_time of a table in tables matches selectedDate, check if the length of booked_time_slots is less than the length of allTimeSlots, indicating that the table can be reserved at that time.
+      // 2. When the booked_date_time of a table in tables does not include selectedDate, it means the table can be reserved.
       const availableTables = restaurantTables.filter((table) => {
         const bookedDate = table.booked_date_time.find((b) => moment(b.booked_date).isSame(selectedDate, "day"));
         return !bookedDate || (bookedDate && bookedDate.booked_time_slots.length < allTimeSlots.length);
       });
 
-      // 根據選擇的人數過濾桌子
-      // const filteredTables = availableTables.filter((table) => table.max_table_capacity >= selectedPartySize);
+      // Filter tables based on the selected party size
       const filteredTables = availableTables.filter(
         (table) => selectedPartySize >= table.table_capacity.min && selectedPartySize <= table.table_capacity.max
       );
       console.log(filteredTables);
 
-      // 創建時間選項：
-      // 1. 當filteredTables的桌子的booked_date_time的booked_date等於selectedDate：如果filteredTables中的“所有桌子”的booked_date_time的booked_time_slots都包含該時間（例如：11:00），則不能渲染該時間選項出來（11:00），否則可以渲染出該時間選項出來（11:00）。
-      // 2. 當tables的桌子的booked_date_time的booked_date沒有包含到selectedDate，則代表是可被預訂的桌子，則可以渲染出該時間選項出來（11:00）。
+      // Create new time options from allTimeSlots:
+      // 1. When the booked_date_time of a table in filteredTables matches selectedDate: If all tables in "filteredTables" have their "booked_time_slots" containing a specific time (e.g., 11:00), that time slot should not be rendered, otherwise, it can be rendered (11:00 AM).
+      // 2. When the booked_date_time of a table in tables does not include selectedDate, it means the table can be reserved, and that time slot can be rendered (11:00 AM).
       let times = [];
       allTimeSlots.forEach((timeSlot) => {
-        // 檢查每個時間段是否至少有一個桌子在該時段是空閒的
+        // Check if at least one table in "filteredTables" is available at that time slot
         const isTimeSlotAvailable = filteredTables.some((table) => {
           const bookedDate = table.booked_date_time.find((b) => moment(b.booked_date).isSame(selectedDate, "day"));
+          // it doesn't have selected date OR some of its "booked_time_slots" do not include timeSlot
           return !bookedDate || !bookedDate.booked_time_slots.includes(timeSlot);
         });
-        // 如果至少有一個桌子在該時段是空閒的，則將該時間加入可預訂的時間列表中
+        // If at least one table is available at that time slot, add it to the list of available times
         if (isTimeSlotAvailable) {
           // Convert to "hh:mm A" format for display
           const displayTimeSlot = moment(timeSlot, "HH:mm").format("hh:mm A");
