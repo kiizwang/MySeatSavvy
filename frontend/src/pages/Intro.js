@@ -8,14 +8,15 @@ import Hours from "../components/Hours.js";
 
 const Intro = () => {
   const currentDate = moment().format("YYYY-MM-DD"); // format: 2023-11-05
-  const currentTime = moment().format("HH:mm"); // format: 14:24
 
-  // const [restaurants, setRestaurants] = useState([]); // no need because using Redux
+  // const [restaurants, setRestaurants] = useState([]); // no need because using "Redux"
+  const [restaurantTables, setRestaurantTables] = useState([]); // Get this restaurant's tables
   const [partyMaxSizeOptions, setPartyMaxSizeOptions] = useState([]);
   const [reservationTimesOptions, setReservationTimesOptions] = useState([]);
   const [selectedPartySize, setSelectedPartySize] = useState("");
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [selectedTime, setSelectedTime] = useState("");
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
 
   // Redux
   const dispatch = useDispatch();
@@ -41,7 +42,8 @@ const Intro = () => {
   useEffect(() => {
     if (restaurants.length > 0 && tables.length > 0) {
       const targetRestaurantId = restaurants[0]._id;
-      const restaurantTables = tables.filter((table) => table.restaurant_id?._id === targetRestaurantId);
+      const targetTables = tables.filter((table) => table.restaurant_id?._id === targetRestaurantId);
+      setRestaurantTables(targetTables);
     }
   }, [restaurants, tables]);
 
@@ -143,7 +145,7 @@ const Intro = () => {
 
   // Date & Time version 2
   useEffect(() => {
-    if (restaurants.length > 0 && tables.length > 0 && selectedDate && selectedPartySize) {
+    if (restaurants.length > 0 && restaurantTables.length > 0 && selectedDate && selectedPartySize) {
       const date = moment(selectedDate);
       const dayName = date.format("dddd");
       const dayInfo = restaurants[0].days.find((d) => d.day === dayName);
@@ -153,7 +155,6 @@ const Intro = () => {
         setReservationTimesOptions([]);
         return;
       }
-
       // 所有的時間選項
       let allTimeSlots = [];
       for (let timeSlot of dayInfo.hour_ranges) {
@@ -169,13 +170,17 @@ const Intro = () => {
       // 獲取所有還可被預訂的桌子：
       // 1. 當tables的桌子的booked_date_time的booked_date等於selectedDate，則檢查booked_time_slots的length是否小於allTimeSlots的length，即代表該日期還有能被預訂的時間。
       // 2. 當tables的桌子的booked_date_time的booked_date沒有包含到selectedDate，則代表是可被預訂的桌子。
-      const availableTables = tables.filter((table) => {
+      const availableTables = restaurantTables.filter((table) => {
         const bookedDate = table.booked_date_time.find((b) => moment(b.booked_date).isSame(selectedDate, "day"));
         return !bookedDate || (bookedDate && bookedDate.booked_time_slots.length < allTimeSlots.length);
       });
 
       // 根據選擇的人數過濾桌子
-      const filteredTables = availableTables.filter((table) => table.max_table_capacity >= selectedPartySize);
+      // const filteredTables = availableTables.filter((table) => table.max_table_capacity >= selectedPartySize);
+      const filteredTables = availableTables.filter(
+        (table) => selectedPartySize >= table.table_capacity.min && selectedPartySize <= table.table_capacity.max
+      );
+      console.log(filteredTables);
 
       // 創建時間選項：
       // 1. 當filteredTables的桌子的booked_date_time的booked_date等於selectedDate：如果filteredTables中的“所有桌子”的booked_date_time的booked_time_slots都包含該時間（例如：11:00），則不能渲染該時間選項出來（11:00），否則可以渲染出該時間選項出來（11:00）。
@@ -187,17 +192,22 @@ const Intro = () => {
           const bookedDate = table.booked_date_time.find((b) => moment(b.booked_date).isSame(selectedDate, "day"));
           return !bookedDate || !bookedDate.booked_time_slots.includes(timeSlot);
         });
-
         // 如果至少有一個桌子在該時段是空閒的，則將該時間加入可預訂的時間列表中
         if (isTimeSlotAvailable) {
-          times.push(timeSlot);
+          // Convert to "hh:mm A" format for display
+          const displayTimeSlot = moment(timeSlot, "HH:mm").format("hh:mm A");
+          times.push(displayTimeSlot);
         }
       });
       console.log("times: " + times);
 
       setReservationTimesOptions(times);
     }
-  }, [restaurants, tables, selectedDate, selectedPartySize]);
+  }, [restaurants, restaurantTables, selectedDate, selectedPartySize]);
+
+  useEffect(() => {
+    setIsSubmitEnabled(selectedPartySize !== "" && selectedDate !== "" && selectedTime !== "");
+  }, [selectedPartySize, selectedDate, selectedTime]);
 
   const handlePartySizeChange = (e) => {
     setSelectedPartySize(e.target.value);
@@ -265,7 +275,9 @@ const Intro = () => {
             </div>
           </section>
         </div>
+        {/* Side Bar */}
         <div className="sidebar">
+          {/* Reservation Info */}
           <section className="reservation-info">
             <h2>Make A Reservation</h2>
             <div className="reservation-info-wrapping">
@@ -278,7 +290,7 @@ const Intro = () => {
                     value={selectedPartySize}
                     onChange={handlePartySizeChange}
                   >
-                    <option value="">Party Size</option>
+                    <option value="">Select Party Size</option>
                     {partyMaxSizeOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -315,7 +327,11 @@ const Intro = () => {
                   </select>
                 </div>
                 <div className="d-grid">
-                  <input type="submit" value="Submit" className="btn btn-warning" />
+                  <input
+                    type="submit"
+                    value="Submit"
+                    className={`btn btn-warning ${!isSubmitEnabled ? "disabled" : ""}`}
+                  />
                 </div>
                 <div>
                   When the time dropdown is greyed out, it means that it's either fully booked or the restaurant is
@@ -330,6 +346,6 @@ const Intro = () => {
       </div>
     </main>
   );
-}
+};
 
-export default Intro
+export default Intro;

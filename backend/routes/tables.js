@@ -2,45 +2,57 @@ const express = require('express');
 const router = express.Router();
 const Table = require('../models/Table');
 const mongoose = require("mongoose");
+const moment = require("moment-timezone");
 
-// For creating table data
-// http://localhost:4000/tables/create-table-sample
-router.get("/create-table-sample", async (req, res) => {
+// Create table sample
+// http://localhost:4000/tables/table-sample-create
+router.get("/table-sample-create", async (req, res) => {
+  const torontoTimeZone = "America/Toronto";
+
   const sampleTablesData = [
     {
       table_name: "A1",
-      max_table_capacity: 4,
+      table_capacity: {
+        min: 1,
+        max: 4,
+      },
       booked_date_time: [
         {
-          booked_date: new Date("2023-11-13"),
+          booked_date: moment.tz("2023-11-13", torontoTimeZone),
           booked_time_slots: ["11:00", "12:00"],
         },
       ],
-      restaurant_id: new mongoose.Types.ObjectId("654b0220c92939bf72348ab0"),
+      restaurant_id: new mongoose.Types.ObjectId("65511ae91afd8462ae0877a2"),
       reservation_id: null,
     },
     {
       table_name: "A2",
-      max_table_capacity: 8,
+      table_capacity: {
+        min: 5,
+        max: 8,
+      },
       booked_date_time: [
         {
-          booked_date: new Date("2023-11-13"),
-          booked_time_slots: ["11:00"],
+          booked_date: moment.tz("2023-11-13", torontoTimeZone),
+          booked_time_slots: ["11:00", "12:00", "13:00"],
         },
       ],
-      restaurant_id: new mongoose.Types.ObjectId("654b0220c92939bf72348ab0"),
+      restaurant_id: new mongoose.Types.ObjectId("65511ae91afd8462ae0877a2"),
       reservation_id: null,
     },
     {
       table_name: "A3",
-      max_table_capacity: 4,
+      table_capacity: {
+        min: 1,
+        max: 4,
+      },
       booked_date_time: [
         {
-          booked_date: new Date("2023-11-13"),
+          booked_date: moment.tz("2023-11-13", torontoTimeZone),
           booked_time_slots: ["11:00", "12:00", "13:00", "14:00", "17:30", "18:30", "19:30", "20:30", "21:30"],
         },
       ],
-      restaurant_id: new mongoose.Types.ObjectId("654b0220c92939bf72348ab0"),
+      restaurant_id: new mongoose.Types.ObjectId("65511ae91afd8462ae0877a2"),
       reservation_id: null,
     },
   ];
@@ -50,6 +62,17 @@ router.get("/create-table-sample", async (req, res) => {
     res.json(savedTables);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// DELETE table sample
+// http://localhost:4000/tables/table-sample-delete
+router.get("/table-sample-delete", async (req, res) => {
+  try {
+    await Table.deleteMany({});
+    res.json({ message: "All tables deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

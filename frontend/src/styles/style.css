@@ -188,6 +188,9 @@ main {
   font-size: 0.875rem;
   line-height: 2rem;
 }
+.restaurant-hours-wrapping table td {
+  border-bottom-width: 0;
+}
 .restaurant-hours-wrapping table td:first-of-type {
   width: 50%;
 }

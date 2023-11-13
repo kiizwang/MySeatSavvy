@@ -7,9 +7,15 @@ const tableSchema = new Schema(
       type: String,
       required: true,
     },
-    max_table_capacity: {
-      type: Number,
-      required: true,
+    table_capacity: {
+      min: {
+        type: Number,
+        required: true,
+      },
+      max: {
+        type: Number,
+        required: true,
+      },
     },
     booked_date_time: [
       // array of booked date and time slots
