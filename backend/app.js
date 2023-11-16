@@ -30,7 +30,7 @@ app.get('/', (req, res) => res.send('Welcome to the SeatSavvy Backend!!!'));
 // Use the routes
 app.use('/customers', customerRouter);
 app.use('/restaurants', restaurantRouter);
-app.use('/menus', menuRouter);
+app.use('/menu', menuRouter);
 app.use('/reservations', reservationsRouter);
 app.use('/tables', tableRouter);
 

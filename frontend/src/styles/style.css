@@ -120,6 +120,35 @@ main {
   background-color: white;
 }
 
+footer {
+  background-color: #2D2E32;
+  display: flex;
+  justify-content: center;
+}
+footer .footer {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  height: 48px;
+  width: 100%;
+  max-width: 1200px;
+  font-size: 0.8rem;
+  color: grey;
+}
+
+.restaurant-hours-wrapping {
+  padding: 1rem 1rem 0;
+  font-size: 0.875rem;
+  line-height: 2rem;
+}
+.restaurant-hours-wrapping table td {
+  border-bottom-width: 0;
+}
+.restaurant-hours-wrapping table td:first-of-type {
+  width: 50%;
+}
+
 .restaurant-info-wrapping,
 .restaurant-content-wrapping,
 .restaurant-menu-wrapping {
@@ -155,6 +184,7 @@ main {
   line-height: 2rem;
 }
 
+.restaurant-content-wrapping,
 .restaurant-menu-wrapping {
   border-bottom: none;
 }
@@ -183,31 +213,46 @@ main {
   color: #757575;
 }
 
-.restaurant-hours-wrapping {
-  padding: 1rem 1rem 0;
-  font-size: 0.875rem;
-  line-height: 2rem;
-}
-.restaurant-hours-wrapping table td {
-  border-bottom-width: 0;
-}
-.restaurant-hours-wrapping table td:first-of-type {
-  width: 50%;
+/* Use a Flexbox to make the Palette/Diagram responsive */
+#myFlexDiv {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
-footer {
-  background-color: #2D2E32;
-  display: flex;
-  justify-content: center;
+@media (min-width: 768px) {
+  #myGuests {
+    width: 100px;
+    height: 500px;
+    margin-right: 10px;
+  }
+  #myDiagramDiv {
+    height: 500px;
+    flex: 1;
+  }
 }
-footer .footer {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-wrap: wrap;
-  height: 48px;
-  width: 100%;
-  max-width: 1200px;
-  font-size: 0.8rem;
-  color: grey;
+@media (max-width: 767px) {
+  #myGuests {
+    width: 20%;
+    max-width: 100px;
+    height: 500px;
+  }
+  #myDiagramDiv {
+    width: 80%;
+    height: 500px;
+    flex: 1;
+  }
+}
+.seating-btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Two columns with equal width */
+  grid-gap: 10px;
+  /* Gap between grid items */
+  margin-top: 20px;
+  /* Adjust the margin as needed */
+}
+
+.seating-btn-grid .btn-seating-back {
+  border: 1px solid #000;
 }/*# sourceMappingURL=style.css.map */

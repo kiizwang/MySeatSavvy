@@ -136,9 +136,13 @@ const Intro = () => {
     e.preventDefault();
     if (isSubmitEnabled) {
       // Session Storage
-      sessionStorage.setItem('availableTables', JSON.stringify(filteredTables));
+      sessionStorage.setItem("availableTables", JSON.stringify(filteredTables));
       // Navigation to Seating page
-      navigate(`/seating?partySize=${selectedPartySize}&date=${selectedDate}&time=${selectedTime}`);
+      navigate(
+        `/seating?partySize=${selectedPartySize}&date=${selectedDate}&time=${moment(selectedTime, "hh:mm A").format(
+          "HH:mm"
+        )}`
+      );
     }
   };
 
@@ -150,8 +154,7 @@ const Intro = () => {
   };
   const handleTimeChange = (e) => {
     const selectedTime = e.target.value;
-    const formattedTime = moment(selectedTime, "hh:mm A").format("HH:mm");
-    setSelectedTime(formattedTime);
+    setSelectedTime(selectedTime);
   };
 
   return (
@@ -204,11 +207,11 @@ const Intro = () => {
             </div>
           </section>
           {/* Menu */}
-          <section className="restaurant-menu">
+          {/* <section className="restaurant-menu">
             <div className="restaurant-menu-wrapping">
               <h2>Menu</h2>
             </div>
-          </section>
+          </section> */}
         </div>
         {/* Side Bar */}
         <div className="sidebar">

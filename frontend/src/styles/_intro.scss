@@ -36,6 +36,7 @@
   line-height: 2rem;
 }
 
+.restaurant-content-wrapping,
 .restaurant-menu-wrapping {
   border-bottom: none;
 }
@@ -64,21 +65,6 @@
       font-size: 0.875rem;
       padding: 0 1rem;
       color: #757575;
-    }
-  }
-}
-
-.restaurant-hours-wrapping {
-  padding: 1rem 1rem 0;
-  font-size: 0.875rem;
-  line-height: 2rem;
-
-  table {
-    td {
-      border-bottom-width: 0;
-    }
-    td:first-of-type {
-        width: 50%;
     }
   }
 }

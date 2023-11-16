@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { NavLink } from "react-router-dom";
 
 const Nav = () => {
@@ -16,14 +16,24 @@ const Nav = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/about" activeclassname="active">
-              About
+            <NavLink to="/seating" activeclassname="active">
+              Seating
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/dinner" activeclassname="active">
+              Dinner
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/submission" activeclassname="active">
+              Submission
             </NavLink>
           </li>
         </ul> */}
       </div>
     </nav>
   );
-}
+};
 
-export default Nav
+export default Nav;
