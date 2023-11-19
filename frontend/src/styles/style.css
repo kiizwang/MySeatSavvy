@@ -143,6 +143,10 @@ main {
   background-color: white;
 }
 
+.main-seating {
+  grid-template-areas: "banner banner" "content content";
+}
+
 @media (max-width: 1280px) {
   .main-content {
     max-width: 100%;
@@ -226,13 +230,12 @@ footer .footer-mobile {
   text-align: center;
 }
 
-.restaurant-side-info,
-.restaurant-side-content {
+.info-mobile {
   display: none;
 }
 
-.restaurant-side-info-secondary {
-  display: block;
+.restaurant-side-content {
+  display: none;
 }
 
 .restaurant-side-info-wrapping {

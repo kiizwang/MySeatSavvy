@@ -14,15 +14,13 @@
   }
 }
 
-// Intro pages
-.restaurant-side-info,
-.restaurant-side-content {
+// For Intro page only
+.info-mobile {
   display: none;
 }
 
-// Diner & Submission pages
-.restaurant-side-info-secondary {
-  display: block;
+.restaurant-side-content {
+  display: none;
 }
 
 // Restaurant Info

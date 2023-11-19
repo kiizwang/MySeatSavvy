@@ -748,7 +748,7 @@ const Seating = () => {
   }, []);
   return (
     <main>
-      <div className="main">
+      <div className="main main-seating">
         <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
         <div className="content">
           <section className="seating-info">
@@ -770,7 +770,7 @@ const Seating = () => {
           </section>
 
           <section className="seating-selection">
-            <div className="restaurant-info-wrapping">
+            <div className="restaurant-content-wrapping">
               <h2>Seating Reservation</h2>
               <div id="myFlexDiv">
                 <div id="myGuests" style={{ border: '1px solid black', position: 'relative', WebkitTapHighlightColor: 'rgba(255, 255, 255, 0)' }}>

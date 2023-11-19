@@ -40,6 +40,11 @@ main {
   }
 }
 
+.main-seating {
+  grid-template-areas: "banner banner"
+    "content content";
+}
+
 @media (max-width: 1280px) {
   .main-content {
       max-width: 100%;

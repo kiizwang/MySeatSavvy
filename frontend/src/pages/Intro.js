@@ -6,7 +6,7 @@ import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { fetchTables } from "../store/tablesSlice.js";
 import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
-import Info from "../components/Info.js";
+import InfoMobile from "../components/InfoMobile.js";
 import Description from "../components/Description.js";
 
 const Intro = () => {
@@ -218,7 +218,7 @@ const Intro = () => {
         {/* Side Bar */}
         <div className="sidebar">
           {/* Restaurant Info on Side Bar */}
-          <Info restaurants={restaurants} />
+          <InfoMobile restaurants={restaurants} />
           {/* Reservation Info */}
           <section className="reservation-info">
             <h2>Make A Reservation</h2>
