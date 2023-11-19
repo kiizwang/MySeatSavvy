@@ -6,6 +6,8 @@ import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { fetchTables } from "../store/tablesSlice.js";
 import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
+import Info from "../components/Info.js";
+import Description from "../components/Description.js";
 
 const Intro = () => {
   const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // can only select date from tomorrow
@@ -159,7 +161,7 @@ const Intro = () => {
 
   return (
     <main>
-      <div className="main">
+      <div className="main main-sidebar">
         <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
         <div className="content">
           {/* Info */}
@@ -215,6 +217,8 @@ const Intro = () => {
         </div>
         {/* Side Bar */}
         <div className="sidebar">
+          {/* Restaurant Info on Side Bar */}
+          <Info restaurants={restaurants} />
           {/* Reservation Info */}
           <section className="reservation-info">
             <h2>Make A Reservation</h2>
@@ -279,6 +283,8 @@ const Intro = () => {
               </form>
             </div>
           </section>
+          {/* Restaurant Description on Side Bar */}
+          <Description restaurants={restaurants} />
           {/* Hours of Operation */}
           <Hours restaurants={restaurants} />
         </div>

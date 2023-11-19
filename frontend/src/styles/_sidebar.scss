@@ -1,0 +1,137 @@
+.sidebar {
+  section {
+    border-bottom: 1px solid #E0E0E0;
+    margin-bottom: 1.5rem;
+  }
+
+  section:last-of-type {
+    border-bottom: unset;
+    margin-bottom: 0;
+  }
+
+  h2 {
+    text-align: center;
+  }
+}
+
+// Intro pages
+.restaurant-side-info,
+.restaurant-side-content {
+  display: none;
+}
+
+// Diner & Submission pages
+.restaurant-side-info-secondary {
+  display: block;
+}
+
+// Restaurant Info
+.restaurant-side-info-wrapping {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 1.5rem 0.5rem;
+
+  .icon-p-wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    color: #212121;
+
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-symbols-outlined {
+
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 300,
+          'GRAD' 0,
+          'opsz' 20;
+      }
+    }
+  }
+}
+
+// Restaurant Description
+.restaurant-side-content-wrapping {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 0 0.5rem 1.5rem;
+}
+
+// Reservation Info
+.reservation-info-wrapping {
+  padding: 1.5rem 0;
+
+  .reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    div:last-child {
+      font-size: 0.875rem;
+      padding: 0 1rem;
+      color: #757575;
+    }
+  }
+}
+
+// Hours of Operation
+.restaurant-hours-wrapping {
+  padding: 1rem 1rem 0;
+  font-size: 0.875rem;
+  line-height: 2rem;
+
+  table {
+    td {
+      border-bottom-width: 0;
+    }
+
+    td:first-of-type {
+      width: 50%;
+    }
+  }
+}
+
+@media (max-width: 1280px) {
+  .restaurant-side-info,
+  .restaurant-side-content {
+    display: block;
+  }
+  .restaurant-hours-wrapping {
+    line-height: 1.5rem;
+    table {
+      td:first-of-type {
+        text-align: right;
+        width: 45%;
+        padding-right: 2.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .restaurant-side-info-wrapping,
+  .restaurant-side-content-wrapping {
+    font-size: 0.875rem;
+  }
+
+  .restaurant-hours-wrapping {
+    padding: 1rem 0 0 0;
+    font-size: 0.75rem;
+    line-height: 1.2rem;
+
+    table {
+      td:first-of-type {
+        padding-right: 1rem;
+        width: 42%;
+      }
+    }
+  }
+}

@@ -1,17 +1,32 @@
 footer {
   background-color: #2D2E32;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-content: center;
+  flex-wrap: nowrap;
+  color: grey;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1rem 0;
 
   .footer {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-wrap: wrap;
-    height: 48px;
-    width: 100%;
-    max-width: 1200px;
-    font-size: 0.8rem;
-    color: grey;
+    display: block;
+  }
+
+  .footer-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  footer {
+    .footer {
+      display: none;
+    }
+
+    .footer-mobile {
+      display: block;
+    }
   }
 }
