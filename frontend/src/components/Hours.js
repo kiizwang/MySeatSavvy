@@ -8,15 +8,15 @@ const formatTime12Hour = (time24) => {
   return `${hours12}:${minutes} ${suffix}`;
 };
 
-const Hours = ({ restaurants }) => {
+const Hours = ({ restaurant }) => {
   return (
     <section className="restaurant-hours">
-      <h2>Hours of Operation</h2>
+      <h3 className="text-center">Hours of Operation</h3>
       <div className="restaurant-hours-wrapping">
         <table className="table table-sm">
           <tbody>
-            {restaurants.length > 0 ? (
-              restaurants[0].days.map((dayInfo) => (
+            {restaurant ? (
+              restaurant.days.map((dayInfo) => (
                 <React.Fragment key={dayInfo.day}>
                   {dayInfo.status === "Open" ? (
                     dayInfo.hour_ranges.map((slot, index) => (

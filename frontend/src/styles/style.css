@@ -21,6 +21,10 @@ h1 {
 }
 
 h2 {
+  font-size: 2em;
+}
+
+h3 {
   font-size: 1.5em;
 }
 
@@ -60,14 +64,14 @@ nav .nav {
   justify-content: center;
   align-content: center;
   flex-wrap: wrap;
-  height: 80px;
+  height: 64px;
   width: 100%;
   max-width: 1200px;
 }
 nav .logo {
   display: flex;
   padding-right: 1rem;
-  height: 3rem;
+  height: 2.4rem;
 }
 nav .logo .logo-img {
   width: 100%;
@@ -80,10 +84,12 @@ nav .logo .logo-img {
 nav .logo .logo-seat {
   font-weight: 600;
   color: white;
+  font-size: 2rem;
 }
 nav .logo .logo-savvy {
   font-weight: 400;
   color: #FFD740;
+  font-size: 2rem;
 }
 nav .nav-links {
   display: flex;
@@ -108,6 +114,224 @@ nav .nav-links a {
     font-size: 1.75rem;
   }
 }
+footer {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: nowrap;
+  color: grey;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+footer .footer {
+  display: block;
+}
+footer .footer-mobile {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  footer .footer {
+    display: none;
+  }
+  footer .footer-mobile {
+    display: block;
+  }
+}
+.landing {
+  display: block;
+}
+
+.landing-cta-btn {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.landing-hero {
+  height: 70vh;
+  min-height: 720px;
+  background-image: url("../images/Landing_Hero.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: "Playfair Display", "Noto Serif", "Times New Roman", Times, serif;
+  font-weight: 600;
+}
+.landing-hero .landing-hero-slogan h1 {
+  font-size: 4rem;
+  color: white;
+}
+.landing-hero .landing-hero-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+}
+.landing-hero .landing-hero-box h3 {
+  line-height: 2rem;
+}
+@media (max-width: 1200px) {
+  .landing-hero .landing-hero-slogan {
+    text-align: center;
+  }
+}
+@media (max-width: 768px) {
+  .landing-hero .landing-hero-slogan h1 {
+    font-size: 3rem;
+  }
+}
+@media (max-width: 576px) {
+  .landing-hero {
+    height: calc(100vh - 56px);
+    min-height: unset;
+    padding: 0 40px;
+  }
+  .landing-hero .landing-hero-slogan h1 {
+    font-size: 2.5rem;
+  }
+  .landing-hero .landing-hero-box {
+    margin: 0 40px;
+  }
+}
+@media (max-width: 400px) {
+  .landing-hero {
+    padding: 0 16px;
+  }
+  .landing-hero .landing-hero-slogan h1 {
+    font-size: 2rem;
+  }
+  .landing-hero .landing-hero-box h3 {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+  }
+  .landing-hero .landing-hero-box .landing-cta-btn {
+    font-size: 1rem;
+  }
+}
+
+.landing-restaurants .landing-restaurants-wrapping {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 80px 0;
+  padding: 0 40px;
+  text-align: center;
+}
+.landing-restaurants .landing-restaurants-wrapping h2 {
+  margin-bottom: 40px;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items {
+  width: 100%;
+  max-width: 960px;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 40px;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item {
+  aspect-ratio: 4/3;
+  background-color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.4s ease-in-out, box-shadow 0.8s ease-in-out;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item:hover .item-image {
+  height: 70%;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item:hover .item-text {
+  height: 30%;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item .item-image {
+  height: 75%;
+  background-position: center;
+  background-size: cover;
+  border-radius: 8px 8px 0 0;
+  transition: height 0.6s ease-in-out;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item .item-text {
+  height: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0 1.5rem;
+  text-align: center;
+  transition: height 0.6s ease-in-out;
+}
+.landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item .item-text p {
+  color: #757575;
+  font-size: 0.875em;
+}
+@media (max-width: 1040px) {
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items {
+    max-width: 100%;
+  }
+}
+@media (min-width: 880px) and (max-width: 1040px) {
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items h3 {
+    font-size: clamp(1.25rem, 2.5vw - 0.12rem, 1.5rem);
+  }
+}
+@media (max-width: 880px) {
+  .landing-restaurants .landing-restaurants-wrapping {
+    margin: 64px 0;
+  }
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items {
+    max-width: 480px;
+    grid-template-columns: 1fr;
+  }
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items h3 {
+    font-size: 1.25rem;
+  }
+}
+@media (max-width: 480px) {
+  .landing-restaurants .landing-restaurants-wrapping {
+    padding: 0 16px;
+    margin: 40px 0;
+  }
+  .landing-restaurants .landing-restaurants-wrapping h2 {
+    margin-bottom: 24px;
+    font-size: 1.75rem;
+  }
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items {
+    grid-gap: 24px;
+  }
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items h3 {
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
+  }
+  .landing-restaurants .landing-restaurants-wrapping .landing-restaurants-items .restaurants-item {
+    aspect-ratio: 1/1;
+  }
+}
+
+.landing-contact {
+  height: 25vw;
+  max-height: 400px;
+  min-height: 200px;
+  background-color: black;
+  background-image: url("../images/Landing_Footer.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.landing-contact .landing-contact-wrapping {
+  color: white;
+  font-family: "Playfair Display", "Noto Serif", "Times New Roman", Times, serif;
+}
+@media (max-width: 576px) {
+  .landing-contact .landing-contact-wrapping h2 {
+    font-size: clamp(1.25rem, 4.7vw + 0.3rem, 2rem);
+  }
+}
+
 main {
   display: flex;
   justify-content: center;
@@ -189,33 +413,6 @@ main {
   .main-sidebar .sidebar {
     margin: 24px;
     padding: 24px;
-  }
-}
-footer {
-  background-color: #2D2E32;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  flex-wrap: nowrap;
-  color: grey;
-  font-size: 0.75rem;
-  text-align: center;
-  padding: 1rem 0;
-}
-footer .footer {
-  display: block;
-}
-footer .footer-mobile {
-  display: none;
-}
-
-@media (max-width: 480px) {
-  footer .footer {
-    display: none;
-  }
-  footer .footer-mobile {
-    display: block;
   }
 }
 .sidebar section {

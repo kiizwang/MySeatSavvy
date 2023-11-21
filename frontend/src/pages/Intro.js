@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
@@ -12,7 +12,10 @@ import Description from "../components/Description.js";
 const Intro = () => {
   const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // can only select date from tomorrow
 
-  // const [restaurants, setRestaurants] = useState([]); // no need because using "Redux"
+  const params = useParams();
+  const restaurantId = params.restaurantId;
+
+  const [restaurant, setRestaurant] = useState("");
   const [restaurantTables, setRestaurantTables] = useState([]); // get this restaurant's tables
   const [partyMaxSizeOptions, setPartyMaxSizeOptions] = useState([]);
   const [reservationTimesOptions, setReservationTimesOptions] = useState([]);
@@ -36,7 +39,11 @@ const Intro = () => {
     if (restaurantsStatus === "idle") {
       dispatch(fetchRestaurants());
     }
-  }, [restaurantsStatus, dispatch]);
+    if (restaurantsStatus === "succeeded") {
+      const foundRestaurant = restaurants.find((r) => r._id === restaurantId);
+      setRestaurant(foundRestaurant);
+    }
+  }, [restaurantsStatus, dispatch, restaurantId, restaurants]);
 
   useEffect(() => {
     if (tablesStatus === "idle") {
@@ -46,31 +53,31 @@ const Intro = () => {
 
   // Restaurant's tables
   useEffect(() => {
-    if (restaurants.length > 0 && tables.length > 0) {
-      const targetRestaurantId = restaurants[0]._id;
+    if (restaurant && tables.length > 0) {
+      const targetRestaurantId = restaurant._id;
       const targetTables = tables.filter((table) => table.restaurant_id?._id === targetRestaurantId);
       setRestaurantTables(targetTables);
     }
-  }, [restaurants, tables]);
+  }, [restaurant, tables]);
 
   // Party size options
   useEffect(() => {
-    if (restaurants.length > 0) {
-      const maxPartySize = restaurants[0].max_party_size;
+    if (restaurant) {
+      const maxPartySize = restaurant.max_party_size;
       const options = Array.from({ length: maxPartySize }, (_, index) => ({
         value: index + 1,
         label: `${index + 1} ${index === 0 ? "Person" : "People"}`,
       }));
       setPartyMaxSizeOptions(options);
     }
-  }, [restaurants]);
+  }, [restaurant]);
 
   // Date & Time
   useEffect(() => {
-    if (restaurants.length > 0 && restaurantTables.length > 0 && selectedDate && selectedPartySize) {
+    if (restaurant && restaurantTables.length > 0 && selectedDate && selectedPartySize) {
       const date = moment(selectedDate);
       const dayName = date.format("dddd");
-      const dayInfo = restaurants[0].days.find((d) => d.day === dayName);
+      const dayInfo = restaurant.days.find((d) => d.day === dayName);
 
       // If the selected date is a day when the restaurant is closed, do not display any time options
       if (!dayInfo || dayInfo.status === "Closed") {
@@ -125,7 +132,7 @@ const Intro = () => {
 
       setReservationTimesOptions(times);
     }
-  }, [restaurants, restaurantTables, selectedDate, selectedPartySize]);
+  }, [restaurant, restaurantTables, selectedDate, selectedPartySize]);
 
   // Submit button's status
   useEffect(() => {
@@ -162,30 +169,30 @@ const Intro = () => {
   return (
     <main>
       <div className="main main-sidebar">
-        <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
+        <Banner bannerImage={restaurant ? restaurant.banner_image : ""} />
         <div className="content">
           {/* Info */}
           <section className="restaurant-info">
-            <h1>{restaurants.length > 0 ? restaurants[0].name : "Loading..."}</h1>
+            <h1>{restaurant ? restaurant.name : "Loading..."}</h1>
             <div className="restaurant-info-wrapping">
               <div className="icon-p-wrapper">
                 <div className="icon-wrapper">
                   <span className="material-icons-outlined material-symbols-outlined">restaurant</span>
                 </div>
-                <span>{restaurants.length > 0 ? restaurants[0].type : "Loading..."}</span>
+                <span>{restaurant ? restaurant.type : "Loading..."}</span>
               </div>
               <div className="icon-p-wrapper">
                 <div className="icon-wrapper">
                   <span className="material-icons-outlined material-symbols-outlined">payments</span>
                 </div>
-                <span>{restaurants.length > 0 ? restaurants[0].payments : "Loading..."}</span>
+                <span>{restaurant ? restaurant.payments : "Loading..."}</span>
               </div>
               <div className="icon-p-wrapper">
                 <div className="icon-wrapper">
                   <span className="material-icons-outlined material-symbols-outlined">storefront</span>
                 </div>
                 <span>
-                  {restaurants.length > 0 ? restaurants[0].address : "Loading..."} <a href="#">View Map</a>
+                  {restaurant ? restaurant.address : "Loading..."} <a href="#">View Map</a>
                 </span>
               </div>
               <div className="icon-p-wrapper">
@@ -193,7 +200,7 @@ const Intro = () => {
                   <span className="material-icons-outlined material-symbols-outlined">call</span>
                 </div>
                 <span>
-                  <a href="#">{restaurants.length > 0 ? restaurants[0].phone : "Loading..."}</a>
+                  <a href="#">{restaurant ? restaurant.phone : "Loading..."}</a>
                 </span>
               </div>
             </div>
@@ -201,8 +208,8 @@ const Intro = () => {
           {/* Description */}
           <section className="restaurant-content">
             <div className="restaurant-content-wrapping">
-              {restaurants.length > 0 ? (
-                restaurants[0].description.map((desc, index) => <p key={index}>{desc}</p>)
+              {restaurant ? (
+                restaurant.description.map((desc, index) => <p key={index}>{desc}</p>)
               ) : (
                 <p>Loading...</p>
               )}
@@ -218,10 +225,10 @@ const Intro = () => {
         {/* Side Bar */}
         <div className="sidebar">
           {/* Restaurant Info on Side Bar */}
-          <InfoMobile restaurants={restaurants} />
+          <InfoMobile restaurant={restaurant} />
           {/* Reservation Info */}
           <section className="reservation-info">
-            <h2>Make A Reservation</h2>
+            <h3 className="text-center">Make A Reservation</h3>
             <div className="reservation-info-wrapping">
               <form action="" method="" className="reservation-form">
                 {/* Party Size */}
@@ -284,9 +291,9 @@ const Intro = () => {
             </div>
           </section>
           {/* Restaurant Description on Side Bar */}
-          <Description restaurants={restaurants} />
+          <Description restaurant={restaurant} />
           {/* Hours of Operation */}
-          <Hours restaurants={restaurants} />
+          <Hours restaurant={restaurant} />
         </div>
       </div>
     </main>

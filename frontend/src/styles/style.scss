@@ -21,6 +21,10 @@ h1 {
 }
 
 h2 {
+  font-size: 2em;
+}
+
+h3 {
   font-size: 1.5em;
 }
 
@@ -51,8 +55,9 @@ a {
 }
 
 @import "./nav";
-@import "./main";
 @import "./footer";
+@import "./landing";
+@import "./main";
 @import "./sidebar";
 @import "./intro";
 @import "./seating";
