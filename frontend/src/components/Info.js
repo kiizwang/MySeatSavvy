@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 
 const Info = ({ restaurant }) => {
   return (
-    <section className="restaurant-side-info restaurant-side-info-secondary">
+    <section className="restaurant-side-info">
       <h3 className="text-center">Restaurant Information</h3>
       <div className="restaurant-side-info-wrapping">
         <div className="icon-p-wrapper">
@@ -38,4 +38,4 @@ const Info = ({ restaurant }) => {
   );
 };
 
-export default Info
+export default Info;

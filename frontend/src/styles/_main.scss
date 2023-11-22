@@ -47,14 +47,15 @@ main {
 
 @media (max-width: 1280px) {
   .main-content {
-      max-width: 100%;
-      grid-template-areas: "banner banner"
-        "content content";
+    max-width: 100%;
+    grid-template-areas: "banner banner"
+      "content content";
 
-      .sidebar {
-        display: none;
-      }
+    .sidebar {
+      display: none;
     }
+  }
+
   .main-sidebar {
     max-width: 100%;
     grid-template-areas: "banner banner"
@@ -68,20 +69,21 @@ main {
 
 @media (max-width: 480px) {
   .main-content {
-      margin: 0;
-      grid-template-rows: 200px auto;
-      grid-template-columns: unset;
-      grid-gap: 0;
+    margin: 0;
+    grid-template-rows: 200px auto;
+    grid-template-columns: unset;
+    grid-gap: 0;
 
-      .banner {
-        border-radius: 0;
-      }
-
-      .content {
-        margin: 24px;
-        padding: 24px;
-      }
+    .banner {
+      border-radius: 0;
     }
+
+    .content {
+      margin: 24px;
+      padding: 24px;
+    }
+  }
+
   .main-sidebar {
     margin: 0;
     grid-template-rows: 200px auto;

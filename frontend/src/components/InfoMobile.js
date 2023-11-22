@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const Info = ({ restaurant }) => {
   return (
@@ -38,4 +38,4 @@ const Info = ({ restaurant }) => {
   );
 };
 
-export default Info
+export default Info;

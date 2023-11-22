@@ -208,11 +208,7 @@ const Intro = () => {
           {/* Description */}
           <section className="restaurant-content">
             <div className="restaurant-content-wrapping">
-              {restaurant ? (
-                restaurant.description.map((desc, index) => <p key={index}>{desc}</p>)
-              ) : (
-                <p>Loading...</p>
-              )}
+              {restaurant ? restaurant.description.map((desc, index) => <p key={index}>{desc}</p>) : <p>Loading...</p>}
             </div>
           </section>
           {/* Menu */}

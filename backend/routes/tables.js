@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Table = require('../models/Table');
+const Table = require("../models/Table");
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
 
@@ -65,7 +65,7 @@ router.get("/table-sample-create", async (req, res) => {
   }
 });
 
-// DELETE table sample
+// Delete table sample
 // http://localhost:4000/tables/table-sample-delete
 router.get("/table-sample-delete", async (req, res) => {
   try {
@@ -77,7 +77,7 @@ router.get("/table-sample-delete", async (req, res) => {
 });
 
 // GET all tables with restaurant details
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const tables = await Table.find().populate("restaurant_id");
     console.log(tables);
@@ -88,8 +88,8 @@ router.get('/', async (req, res) => {
 });
 
 // POST a new table
-router.post('/', async (req, res) => {
-    console.log('req.body', req.body);
+router.post("/", async (req, res) => {
+  console.log("req.body", req.body);
   const table = new Table(req.body);
   try {
     const newTable = await table.save();

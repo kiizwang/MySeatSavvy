@@ -98,12 +98,15 @@
 }
 
 @media (max-width: 1280px) {
+
   .restaurant-side-info,
   .restaurant-side-content {
     display: block;
   }
+
   .restaurant-hours-wrapping {
     line-height: 1.5rem;
+
     table {
       td:first-of-type {
         text-align: right;
@@ -115,6 +118,7 @@
 }
 
 @media (max-width: 480px) {
+
   .restaurant-side-info-wrapping,
   .restaurant-side-content-wrapping {
     font-size: 0.875rem;

@@ -7,10 +7,7 @@ const Banner = ({ bannerImage }) => {
 
   const backgroundImage = `url(/images/${bannerImage})`;
 
-  return (
-    <div className="banner" style={{ backgroundImage: backgroundImage }}>
-    </div>
-  );
+  return <div className="banner" style={{ backgroundImage: backgroundImage }}></div>;
 };
 
 export default Banner;

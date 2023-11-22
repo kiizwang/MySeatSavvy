@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import Banner from "../components/Banner.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mui/material";
@@ -11,6 +10,10 @@ import { Box, style } from "@mui/system";
 import { faCcMastercard } from "@fortawesome/free-brands-svg-icons/faCcMastercard";
 import { faPhone, faLocationDot, faUtensils, faClock } from "@fortawesome/free-solid-svg-icons";
 import { grey } from "@mui/material/colors";
+import { loadStripe } from "@stripe/stripe-js";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 const Diner = () => {
   const dispatch = useDispatch();
@@ -22,15 +25,27 @@ const Diner = () => {
     }
   }, [restaurantsStatus, dispatch]);
   const navigate = useNavigate();
-  console.log("Samhitha ", restaurants);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const partySizeParam = queryParams.get("partySize");
+  const dateParam = queryParams.get("date");
+  const timeParam = queryParams.get("time");
+  // Format date and time
+  const dateTimeString = `${dateParam} ${timeParam}`; // Concatenate the date and time strings to form a complete datetime string
+  const parsedDateTime = moment(dateTimeString, "YYYY-MM-DD HH:mm"); // Create a moment object by parsing the datetime string
+  const formattedDateTime = parsedDateTime.format("hh:mmA, ddd D MMM YYYY"); // Format the parsed datetime as required (including AM/PM for time)
+  const selectedTable = queryParams.get("selected_table");
   //State management of reservation details
   const [reservationDetails, setReservationDetails] = useState({
     firstName: "",
     lastName: "",
     phoneNumber: "",
     email: "",
-    specialRequest: "",
+    specialRequest: " ",
   });
+
   const handleChange = (e, field) => {
     setReservationDetails({ ...reservationDetails, [field]: e.target.value });
   };
@@ -70,6 +85,33 @@ const Diner = () => {
     color: "#000000",
   };
 
+  const makePayment = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51O9u29GxPIHOFN70nBDCTbDystrGdqqaUo0Z6QIva1wU8RbuDa6LO2xmF2MuPkztNBCSWW3HiANCezaH5HQSryd2008cPqwEm6"
+    );
+
+    const body = {
+      details: reservationDetails,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const response = await fetch("http://localhost:4000/payment", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+
+    const session = await response.json();
+
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      console.log(result.error);
+    }
+  };
   const submitReservations = () => {
     if (disableSubmitButton) {
       const requestOptions = {
@@ -81,16 +123,24 @@ const Diner = () => {
           email: reservationDetails.email,
           phone: reservationDetails.phoneNumber,
           note: reservationDetails.specialRequest,
-          date: "november 14 2023",
-          time: "2:40 PM",
+          date: dateParam || Date(),
+          time: timeParam,
           restaurant_id: restaurants[0]._id,
-          table_id: "65528b55abb074ab31e0fd0b",
+          table_id: selectedTable,
         }),
       };
       fetch("http://localhost:4000/reservations", requestOptions)
         .then((response) => response.json())
-        .then((data) => navigate(`/submission`));
+        .then((data) => {
+          console.log(data);
+          makePayment();
+        });
     }
+  };
+
+  const handleBack = () => {
+    // Go back to the previous page
+    navigate(-1);
   };
 
   return (
@@ -107,13 +157,13 @@ const Diner = () => {
               <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                 <FontAwesomeIcon icon={faUtensils} />
               </IconButton>
-              <Typography>2 Adults </Typography>
+              <Typography>{`${partySizeParam} Adults`} </Typography>
             </Box>
             <Box display="flex" alignItems="center">
               <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                 <FontAwesomeIcon icon={faClock} />
               </IconButton>
-              <Typography>Time</Typography>
+              <Typography>{`${formattedDateTime}`}</Typography>
             </Box>
             <Divider />
             <Typography variant="h4" fontWeight="600" style={{ paddingTop: "8px" }}>
@@ -226,7 +276,9 @@ const Diner = () => {
                 />
               </Grid>
             </Grid>
-
+            <Typography fontSize={18} fontWeight={500} paddingTop={1} paddingLeft={2} color={"green"}>
+              Payment of 20CAD is required to complete reservation of table.
+            </Typography>
             <Button
               disabled={!disableSubmitButton}
               onClick={submitReservations}
@@ -234,9 +286,9 @@ const Diner = () => {
               style={customButtonStyle}
               sx={{ marginTop: "16px" }}
             >
-              Submit
+              Pay 20CAD
             </Button>
-            <Button variant="contained" sx={{ marginTop: "16px" }} style={customBackButtonStyle}>
+            <Button variant="contained" sx={{ marginTop: "16px" }} style={customBackButtonStyle} onClick={handleBack}>
               Back
             </Button>
           </Box>

@@ -1,5 +1,5 @@
-import React from 'react';
-import Nav from './components/Nav.js';
+import React from "react";
+import Nav from "./components/Nav.js";
 import Footer from "./components/Footer.js";
 import Landing from "./pages/Landing.js";
 import Intro from "./pages/Intro.js";
@@ -11,7 +11,6 @@ import { Routes, Route } from "react-router-dom";
 import "./styles/style.css";
 
 const App = () => {
-
   return (
     <div>
       <Nav />
@@ -26,6 +25,6 @@ const App = () => {
       <Footer />
     </div>
   );
-}
+};
 
 export default App;
