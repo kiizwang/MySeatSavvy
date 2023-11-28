@@ -604,4 +604,12 @@ main {
 
 .seating-btn-grid .btn-seating-back {
   border: 1px solid #000;
+}
+
+.restaurant-info-wrapping {
+  padding: 0 0.5rem 1.5rem;
+}
+
+.submission-info {
+  padding: 1.5rem 0.5rem 0;
 }/*# sourceMappingURL=style.css.map */

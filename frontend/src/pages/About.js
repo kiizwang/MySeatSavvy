@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
@@ -9,6 +9,11 @@ import Hours from "../components/Hours.js";
 import Info from "../components/Info.js";
 
 const About = () => {
+  // http://localhost:3000/about/65511ae91afd8462ae0877a2
+  const params = useParams();
+  const restaurantId = params.restaurantId;
+  const [restaurant, setRestaurant] = useState("");
+
   // Redux
   const dispatch = useDispatch();
   const restaurants = useSelector((state) => state.restaurants.entities);
@@ -19,12 +24,16 @@ const About = () => {
     if (restaurantsStatus === "idle") {
       dispatch(fetchRestaurants());
     }
-  }, [restaurantsStatus, dispatch]);
+    if (restaurantsStatus === "succeeded") {
+      const foundRestaurant = restaurants.find((r) => r._id === restaurantId);
+      setRestaurant(foundRestaurant);
+    }
+  }, [restaurantsStatus, dispatch, restaurantId, restaurants]);
 
   return (
     <main>
       <div className="main main-content">
-        <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
+        <Banner bannerImage={restaurant ? restaurant.banner_image : ""} />
         <div className="content diner-content">
           {/* Info */}
           <section className="restaurant-info">
@@ -34,13 +43,13 @@ const About = () => {
                 <div className="icon-wrapper">
                   <span className="material-icons-outlined material-symbols-outlined">restaurant</span>
                 </div>
-                <span>{restaurants.length > 0 ? restaurants[0].type : "Loading..."}</span>
+                <span>{restaurant ? restaurant.type : "Loading..."}</span>
               </div>
               <div className="icon-p-wrapper">
                 <div className="icon-wrapper">
                   <span className="material-icons-outlined material-symbols-outlined">payments</span>
                 </div>
-                <span>{restaurants.length > 0 ? restaurants[0].payments : "Loading..."}</span>
+                <span>{restaurant ? restaurant.payments : "Loading..."}</span>
               </div>
             </div>
           </section>
@@ -48,9 +57,9 @@ const About = () => {
         {/* Side Bar */}
         <div className="sidebar">
           {/* Restaurant Info on Side Bar */}
-          <Info restaurants={restaurants} />
+          <Info restaurant={restaurant} />
           {/* Hours of Operation */}
-          <Hours restaurants={restaurants} />
+          <Hours restaurant={restaurant} />
         </div>
       </div>
     </main>
