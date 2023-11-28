@@ -9,7 +9,11 @@ import Hours from "../components/Hours.js";
 import { Divider, Grid, IconButton, Typography } from "@mui/material";
 import { Box, style } from "@mui/system";
 import { faCcMastercard } from "@fortawesome/free-brands-svg-icons/faCcMastercard";
-import { faPhone, faLocationDot, faUtensils } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPhone,
+  faLocationDot,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 
 const Submission = () => {
@@ -36,7 +40,11 @@ const Submission = () => {
               {restaurants.length > 0 ? restaurants[0].name : "Loading..."}
             </Typography>
             <Divider />
-            <Typography variant="h4" fontWeight="600" style={{ paddingTop: "8px" }}>
+            <Typography
+              variant="h4"
+              fontWeight="600"
+              style={{ paddingTop: "8px" }}
+            >
               Submission details
             </Typography>
             <Typography style={{ paddingTop: "8px", paddingBottom: "16px" }}>
@@ -79,7 +87,9 @@ const Submission = () => {
                 <Typography fontWeight="600">Name</Typography>
               </Grid>
               <Grid item xs={6} md={3}>
-                <Typography>{state.firstname + " " + state.lastname}</Typography>
+                <Typography>
+                  {state.firstname + " " + state.lastname}
+                </Typography>
               </Grid>
             </Grid>
             <Grid container spacing={2}>
@@ -120,27 +130,38 @@ const Submission = () => {
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faUtensils} />
                 </IconButton>
-                <Typography paddingTop={1}> {restaurants.length > 0 ? restaurants[0].type : "Loading..."}</Typography>
+                <Typography paddingTop={1}>
+                  {" "}
+                  {restaurants.length > 0 ? restaurants[0].type : "Loading..."}
+                </Typography>
               </Box>
               <Box display="flex" alignItems="left">
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faCcMastercard} />
                 </IconButton>
                 <Typography paddingTop={1}>
-                  {restaurants.length > 0 ? restaurants[0].payments : "Loading..."}
+                  {restaurants.length > 0
+                    ? restaurants[0].payments
+                    : "Loading..."}
                 </Typography>
               </Box>
               <Box display="flex" alignItems="left">
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faLocationDot} />
                 </IconButton>
-                <Typography paddingTop={1}>{restaurants.length > 0 ? restaurants[0].address : "Loading..."}</Typography>
+                <Typography paddingTop={1}>
+                  {restaurants.length > 0
+                    ? restaurants[0].address
+                    : "Loading..."}
+                </Typography>
               </Box>
               <Box display="flex" alignItems="left">
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faPhone} />
                 </IconButton>
-                <Typography paddingTop={1}>{restaurants.length > 0 ? restaurants[0].phone : "Loading..."}</Typography>
+                <Typography paddingTop={1}>
+                  {restaurants.length > 0 ? restaurants[0].phone : "Loading..."}
+                </Typography>
               </Box>
             </Box>
             <br></br>

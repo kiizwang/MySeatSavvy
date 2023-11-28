@@ -5,14 +5,25 @@ import { Button } from "@mui/material";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import Hours from "../components/Hours.js";
-import { Divider, Grid, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box, style } from "@mui/system";
 import { faCcMastercard } from "@fortawesome/free-brands-svg-icons/faCcMastercard";
-import { faPhone, faLocationDot, faUtensils, faClock } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPhone,
+  faLocationDot,
+  faUtensils,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import { grey } from "@mui/material/colors";
-import { loadStripe } from "@stripe/stripe-js";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {loadStripe} from '@stripe/stripe-js';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import moment from "moment";
 
 const Diner = () => {
@@ -29,14 +40,14 @@ const Diner = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  const partySizeParam = queryParams.get("partySize");
-  const dateParam = queryParams.get("date");
-  const timeParam = queryParams.get("time");
+  const partySizeParam = queryParams.get('partySize');
+  const dateParam = queryParams.get('date');
+  const timeParam = queryParams.get('time');
   // Format date and time
   const dateTimeString = `${dateParam} ${timeParam}`; // Concatenate the date and time strings to form a complete datetime string
-  const parsedDateTime = moment(dateTimeString, "YYYY-MM-DD HH:mm"); // Create a moment object by parsing the datetime string
-  const formattedDateTime = parsedDateTime.format("hh:mmA, ddd D MMM YYYY"); // Format the parsed datetime as required (including AM/PM for time)
-  const selectedTable = queryParams.get("selected_table");
+  const parsedDateTime = moment(dateTimeString, 'YYYY-MM-DD HH:mm');  // Create a moment object by parsing the datetime string
+  const formattedDateTime = parsedDateTime.format('hh:mmA, ddd D MMM YYYY');  // Format the parsed datetime as required (including AM/PM for time)
+  const selectedTable = queryParams.get("selected_table")
   //State management of reservation details
   const [reservationDetails, setReservationDetails] = useState({
     firstName: "",
@@ -85,33 +96,31 @@ const Diner = () => {
     color: "#000000",
   };
 
-  const makePayment = async () => {
-    const stripe = await loadStripe(
-      "pk_test_51O9u29GxPIHOFN70nBDCTbDystrGdqqaUo0Z6QIva1wU8RbuDa6LO2xmF2MuPkztNBCSWW3HiANCezaH5HQSryd2008cPqwEm6"
-    );
+  const makePayment = async()=>{
+    const stripe = await loadStripe("pk_test_51O9u29GxPIHOFN70nBDCTbDystrGdqqaUo0Z6QIva1wU8RbuDa6LO2xmF2MuPkztNBCSWW3HiANCezaH5HQSryd2008cPqwEm6");
 
     const body = {
-      details: reservationDetails,
-    };
+        details: reservationDetails
+    }
     const headers = {
-      "Content-Type": "application/json",
-    };
-    const response = await fetch("http://localhost:4000/payment", {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(body),
+        "Content-Type":"application/json"
+    }
+    const response = await fetch("http://localhost:4000/payment",{
+        method:"POST",
+        headers:headers,
+        body:JSON.stringify(body)
     });
 
     const session = await response.json();
 
     const result = stripe.redirectToCheckout({
-      sessionId: session.id,
+        sessionId:session.id
     });
-
-    if (result.error) {
-      console.log(result.error);
+    
+    if(result.error){
+        console.log(result.error);
     }
-  };
+}
   const submitReservations = () => {
     if (disableSubmitButton) {
       const requestOptions = {
@@ -126,7 +135,7 @@ const Diner = () => {
           date: dateParam || Date(),
           time: timeParam,
           restaurant_id: restaurants[0]._id,
-          table_id: selectedTable,
+          table_id: selectedTable
         }),
       };
       fetch("http://localhost:4000/reservations", requestOptions)
@@ -146,7 +155,11 @@ const Diner = () => {
   return (
     <main>
       <div className="main">
-        <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
+        <Banner
+          bannerImage={
+            restaurants.length > 0 ? restaurants[0].banner_image : ""
+          }
+        />
         <div className="content">
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography variant="h3" fontWeight="600">
@@ -166,7 +179,11 @@ const Diner = () => {
               <Typography>{`${formattedDateTime}`}</Typography>
             </Box>
             <Divider />
-            <Typography variant="h4" fontWeight="600" style={{ paddingTop: "8px" }}>
+            <Typography
+              variant="h4"
+              fontWeight="600"
+              style={{ paddingTop: "8px" }}
+            >
               Dinner Details
             </Typography>
             <Grid container spacing={2}>
@@ -174,9 +191,13 @@ const Diner = () => {
                 <TextField
                   fullWidth
                   required
-                  error={!validateName(reservationDetails.firstName) && reservationDetails.firstName.length > 0}
+                  error={
+                    !validateName(reservationDetails.firstName) &&
+                    reservationDetails.firstName.length > 0
+                  }
                   helperText={
-                    !validateName(reservationDetails.firstName) && reservationDetails.firstName.length > 0
+                    !validateName(reservationDetails.firstName) &&
+                    reservationDetails.firstName.length > 0
                       ? "Please Enter valid First Name"
                       : ""
                   }
@@ -195,9 +216,13 @@ const Diner = () => {
                 <TextField
                   fullWidth
                   required
-                  error={!validateName(reservationDetails.lastName) && reservationDetails.lastName.length > 0}
+                  error={
+                    !validateName(reservationDetails.lastName) &&
+                    reservationDetails.lastName.length > 0
+                  }
                   helperText={
-                    !validateName(reservationDetails.lastName) && reservationDetails.lastName.length > 0
+                    !validateName(reservationDetails.lastName) &&
+                    reservationDetails.lastName.length > 0
                       ? "Please Enter valid Last Name"
                       : ""
                   }
@@ -219,10 +244,12 @@ const Diner = () => {
                   fullWidth
                   required
                   error={
-                    !validatePhoneNumber(reservationDetails.phoneNumber) && reservationDetails.phoneNumber.length > 0
+                    !validatePhoneNumber(reservationDetails.phoneNumber) &&
+                    reservationDetails.phoneNumber.length > 0
                   }
                   helperText={
-                    !validatePhoneNumber(reservationDetails.phoneNumber) && reservationDetails.phoneNumber.length > 0
+                    !validatePhoneNumber(reservationDetails.phoneNumber) &&
+                    reservationDetails.phoneNumber.length > 0
                       ? "Please enter valid Phone Number"
                       : ""
                   }
@@ -241,9 +268,13 @@ const Diner = () => {
                 <TextField
                   fullWidth
                   required
-                  error={!validateEmail(reservationDetails.email) && reservationDetails.email.length > 0}
+                  error={
+                    !validateEmail(reservationDetails.email) &&
+                    reservationDetails.email.length > 0
+                  }
                   helperText={
-                    !validateEmail(reservationDetails.email) && reservationDetails.email.length > 0
+                    !validateEmail(reservationDetails.email) &&
+                    reservationDetails.email.length > 0
                       ? "Please Enter valid Email"
                       : ""
                   }
@@ -277,7 +308,7 @@ const Diner = () => {
               </Grid>
             </Grid>
             <Typography fontSize={18} fontWeight={500} paddingTop={1} paddingLeft={2} color={"green"}>
-              Payment of 20CAD is required to complete reservation of table.
+                Payment of 20CAD is required to complete reservation of table.
             </Typography>
             <Button
               disabled={!disableSubmitButton}
@@ -288,7 +319,12 @@ const Diner = () => {
             >
               Pay 20CAD
             </Button>
-            <Button variant="contained" sx={{ marginTop: "16px" }} style={customBackButtonStyle} onClick={handleBack}>
+            <Button
+              variant="contained"
+              sx={{ marginTop: "16px" }}
+              style={customBackButtonStyle}
+              onClick={handleBack}
+            >
               Back
             </Button>
           </Box>
@@ -305,27 +341,38 @@ const Diner = () => {
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faUtensils} />
                 </IconButton>
-                <Typography paddingTop={1}> {restaurants.length > 0 ? restaurants[0].type : "Loading..."}</Typography>
+                <Typography paddingTop={1}>
+                  {" "}
+                  {restaurants.length > 0 ? restaurants[0].type : "Loading..."}
+                </Typography>
               </Box>
               <Box display="flex" alignItems="left">
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faCcMastercard} />
                 </IconButton>
                 <Typography paddingTop={1}>
-                  {restaurants.length > 0 ? restaurants[0].payments : "Loading..."}
+                  {restaurants.length > 0
+                    ? restaurants[0].payments
+                    : "Loading..."}
                 </Typography>
               </Box>
               <Box display="flex" alignItems="left">
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faLocationDot} />
                 </IconButton>
-                <Typography paddingTop={1}>{restaurants.length > 0 ? restaurants[0].address : "Loading..."}</Typography>
+                <Typography paddingTop={1}>
+                  {restaurants.length > 0
+                    ? restaurants[0].address
+                    : "Loading..."}
+                </Typography>
               </Box>
               <Box display="flex" alignItems="left">
                 <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                   <FontAwesomeIcon icon={faPhone} />
                 </IconButton>
-                <Typography paddingTop={1}>{restaurants.length > 0 ? restaurants[0].phone : "Loading..."}</Typography>
+                <Typography paddingTop={1}>
+                  {restaurants.length > 0 ? restaurants[0].phone : "Loading..."}
+                </Typography>
               </Box>
             </Box>
             <br></br>

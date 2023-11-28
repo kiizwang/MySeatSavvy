@@ -147,10 +147,16 @@ const Intro = () => {
       // Session Storage
       sessionStorage.setItem("availableTables", JSON.stringify(filteredTables));
       // Navigation to Seating page
+      // navigate(
+      //   `/seating?partySize=${selectedPartySize}&date=${selectedDate}&time=${moment(selectedTime, "hh:mm A").format(
+      //     "HH:mm"
+      //   )}`
+      // );
       navigate(
-        `/seating?partySize=${selectedPartySize}&date=${selectedDate}&time=${moment(selectedTime, "hh:mm A").format(
-          "HH:mm"
-        )}`
+        `/seating?restaurantId=${restaurant._id}&partySize=${selectedPartySize}&date=${selectedDate}&time=${moment(
+          selectedTime,
+          "hh:mm A"
+        ).format("HH:mm")}`
       );
     }
   };
