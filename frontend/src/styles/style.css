@@ -561,13 +561,29 @@ main {
   line-height: 2rem;
 }
 
+.restaurant-menu-wrapping .menu-items {
+  display: flex;
+  gap: 0.5rem;
+}
+.restaurant-menu-wrapping .menu-items > div {
+  box-shadow: none;
+}
+
 .restaurant-map-wrapping {
   border-bottom: none;
   padding: 1.5rem 0.5rem 0;
 }
-
-.restaurant-map-style {
+.restaurant-map-wrapping .restaurant-map-style {
   height: 400px;
+}
+
+.MuiModal-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.MuiModal-root .modal-content {
+  width: unset;
 }
 
 /* Use a Flexbox to make the Palette/Diagram responsive */

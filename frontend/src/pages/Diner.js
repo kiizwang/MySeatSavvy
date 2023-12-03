@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mui/material";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { useSelector, useDispatch } from "react-redux";
-import InfoMobile from "../components/InfoMobile.js";
+import Info from "../components/Info.js";
 import Hours from "../components/Hours.js";
 import {
   Divider,
@@ -164,7 +164,7 @@ const Diner = () => {
   return (
     <main>
       <div className="main">
-        <Banner bannerImage={restaurants.length > 0 ? restaurant.banner_image : ""} />
+        <Banner bannerImage={restaurant ? restaurant.banner_image : ""} />
         <div className="content">
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <h1>{restaurant ? restaurant.name : "Loading..."}</h1>
@@ -321,7 +321,14 @@ const Diner = () => {
             </Button>
           </Box>
         </div>
+        {/* Side Bar */}
         <div className="sidebar">
+          {/* Restaurant Info on Side Bar */}
+          <Info restaurant={restaurant} />
+          {/* Hours of Operation */}
+          <Hours restaurant={restaurant} />
+        </div>
+        {/* <div className="sidebar">
           <div className="content">
             <section className="restaurant-info">
               <h3 className="text-center">Restaurant Information</h3>
@@ -364,7 +371,7 @@ const Diner = () => {
               <Hours restaurant={restaurant} />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );

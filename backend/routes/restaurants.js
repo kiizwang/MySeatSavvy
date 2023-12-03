@@ -17,6 +17,20 @@ router.get("/create-restaurant-1", async (req, res) => {
       "Whether you’re partaking in a crafted cocktail during live music or a late-night bite in one of our booths, you’ll be able to experience a sociable atmosphere, curated beverages and delicious fare that will leave you sated.",
     ],
     banner_image: "The_Rich_Uncle_Tavern.jpg",
+    menu: [
+      {
+        name: "The Rich Uncle Tavern menu first page",
+        image: "The_Rich_Uncle_Tavern_menu_page_1.jpg",
+      },
+      {
+        name: "The Rich Uncle Tavern menu second page",
+        image: "The_Rich_Uncle_Tavern_menu_page_2.jpg",
+      },
+      {
+        name: "The Rich Uncle Tavern menu third page",
+        image: "The_Rich_Uncle_Tavern_menu_page_3.jpg",
+      },
+    ],
     days: [
       {
         day: "Sunday",
@@ -93,6 +107,24 @@ router.get("/create-restaurant-2", async (req, res) => {
       "Hamilton's Premier Steakhouse at the corner of Locke and King. Enjoy exquisite dining in a setting purposefully designed to highlight the character of its past. Superior quality craft Steaks, luxurious Japanese Wagyu and Seafood highlight the menu offerings with creative cocktails and carefully chosen wines, served with warm and genuine hospitality. Suitable for cocktails in the lounge, or a full dining experience with a private room available.",
     ],
     banner_image: "Victorias_Restaurant.jpg",
+    menu: [
+      {
+        name: "Victoria's Restaurant menu first page",
+        image: "Victorias_Restaurant_menu_page_1.jpg",
+      },
+      {
+        name: "Victoria's Restaurant menu second page",
+        image: "Victorias_Restaurant_menu_page_2.jpg",
+      },
+      {
+        name: "Victoria's Restaurant menu third page",
+        image: "Victorias_Restaurant_menu_page_3.jpg",
+      },
+      {
+        name: "Victoria's Restaurant menu fourth page",
+        image: "Victorias_Restaurant_menu_page_4.jpg",
+      },
+    ],
     days: [
       {
         day: "Sunday",
@@ -156,6 +188,12 @@ router.get("/create-restaurant-3", async (req, res) => {
       "Crowsfoot does have its own on-site General Store, stocked with locally sourced products, produce, and everyday essentials.",
     ],
     banner_image: "Crowsfoot_Smokehaus.jpg",
+    menu: [
+      {
+        name: "Crowsfoot Smokehaus menu first page",
+        image: "Crowsfoot_Smokehaus_menu_page_1.jpg",
+      },
+    ],
     days: [
       {
         day: "Sunday",
@@ -219,6 +257,20 @@ router.get("/create-restaurant-4", async (req, res) => {
       "Buon Appetito",
     ],
     banner_image: "Dels_Italian_Kitchen.jpg",
+    menu: [
+      {
+        name: "Dels Italian Kitchen menu first page",
+        image: "Dels_Italian_Kitchen_menu_page_1.jpg",
+      },
+      {
+        name: "Dels Italian Kitchen menu second page",
+        image: "Dels_Italian_Kitchen_menu_page_2.jpg",
+      },
+      {
+        name: "Dels Italian Kitchen menu third page",
+        image: "Dels_Italian_Kitchen_menu_page_3.jpg",
+      },
+    ],
     days: [
       {
         day: "Sunday",

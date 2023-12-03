@@ -23,6 +23,17 @@ const locationSchema = new Schema({
   },
 });
 
+const menuItemSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+});
+
 const restaurantSchema = new Schema(
   {
     name: {
@@ -54,6 +65,7 @@ const restaurantSchema = new Schema(
       type: String,
       required: true,
     },
+    menu: [menuItemSchema],
     days: [
       {
         day: {

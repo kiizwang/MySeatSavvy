@@ -8,6 +8,9 @@ import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 import InfoMobile from "../components/InfoMobile.js";
 import Description from "../components/Description.js";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import Modal from "@mui/material/Modal";
 import Map from "../components/Map.js";
 
 const Intro = () => {
@@ -27,13 +30,6 @@ const Intro = () => {
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   console.log(filteredTables);
 
-  // Google Map
-  const [mapCenter, setMapCenter] = useState(null);
-  const mapStyle = {
-    width: "100%",
-    height: "400px",
-  };
-
   // Redux
   const dispatch = useDispatch();
   const restaurants = useSelector((state) => state.restaurants.entities);
@@ -43,6 +39,7 @@ const Intro = () => {
   const tablesStatus = useSelector((state) => state.tables.status);
   const tablesError = useSelector((state) => state.tables.error);
 
+  // All restaurants
   useEffect(() => {
     if (restaurantsStatus === "idle") {
       dispatch(fetchRestaurants());
@@ -65,13 +62,14 @@ const Intro = () => {
     }
   }, [restaurantsStatus, dispatch, restaurantId, restaurants]);
 
+  // All tables
   useEffect(() => {
     if (tablesStatus === "idle") {
       dispatch(fetchTables());
     }
   }, [tablesStatus, dispatch]);
 
-  // Restaurant's tables
+  // This restaurant's tables
   useEffect(() => {
     if (restaurant && tables.length > 0) {
       const targetRestaurantId = restaurant._id;
@@ -181,6 +179,24 @@ const Intro = () => {
     }
   };
 
+  // Menu
+  const [openModal, setOpenModal] = useState(false);
+  const [modalImage, setModalImage] = useState("");
+  const handleOpenModal = (image) => {
+    setModalImage("/images/" + image);
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  // Google Map
+  const [mapCenter, setMapCenter] = useState(null);
+  const mapStyle = {
+    width: "100%",
+    height: "400px",
+  };
+
   const handlePartySizeChange = (e) => {
     setSelectedPartySize(e.target.value);
   };
@@ -241,6 +257,28 @@ const Intro = () => {
           <section className="restaurant-menu">
             <div className="restaurant-menu-wrapping">
               <h2>Menu</h2>
+              {/* Menu MUI */}
+              <div className="menu-items">
+                {restaurant.menu ? (
+                  restaurant.menu.map((item, index) => (
+                    <Card key={index} onClick={() => handleOpenModal(item.image)}>
+                      <CardMedia
+                        component="img"
+                        image={`/images/${item.image}`}
+                        alt={item.name}
+                        style={{ height: 100, width: 100 }}
+                      />
+                    </Card>
+                  ))
+                ) : (
+                  <p>Loading...</p>
+                )}
+              </div>
+              <Modal open={openModal} onClose={handleCloseModal}>
+                <div className="modal-content">
+                  <img src={modalImage} alt="Menu" style={{ width: "auto", height: "95vh" }} />
+                </div>
+              </Modal>
             </div>
           </section>
           {/* Map */}

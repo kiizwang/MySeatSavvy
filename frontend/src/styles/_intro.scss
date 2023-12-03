@@ -36,11 +36,32 @@
   line-height: 2rem;
 }
 
+.restaurant-menu-wrapping {
+  .menu-items {
+    display: flex;
+    gap: 0.5rem;
+
+    &>div {
+      box-shadow: none;
+    }
+  }
+}
+
 .restaurant-map-wrapping {
   border-bottom: none;
   padding: 1.5rem 0.5rem 0;
+
+  .restaurant-map-style {
+    height: 400px;
+  }
 }
 
-.restaurant-map-style {
-  height: 400px;
+.MuiModal-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal-content {
+    width: unset;
+  }
 }
