@@ -524,7 +524,8 @@ main {
 }
 .restaurant-info-wrapping,
 .restaurant-content-wrapping,
-.restaurant-menu-wrapping {
+.restaurant-menu-wrapping,
+.restaurant-map-wrapping {
   display: flex;
   gap: 1rem;
   flex-direction: column;
@@ -534,7 +535,8 @@ main {
 }
 .restaurant-info-wrapping .icon-p-wrapper,
 .restaurant-content-wrapping .icon-p-wrapper,
-.restaurant-menu-wrapping .icon-p-wrapper {
+.restaurant-menu-wrapping .icon-p-wrapper,
+.restaurant-map-wrapping .icon-p-wrapper {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
@@ -542,14 +544,16 @@ main {
 }
 .restaurant-info-wrapping .icon-p-wrapper .icon-wrapper,
 .restaurant-content-wrapping .icon-p-wrapper .icon-wrapper,
-.restaurant-menu-wrapping .icon-p-wrapper .icon-wrapper {
+.restaurant-menu-wrapping .icon-p-wrapper .icon-wrapper,
+.restaurant-map-wrapping .icon-p-wrapper .icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .restaurant-info-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined,
 .restaurant-content-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined,
-.restaurant-menu-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined {
+.restaurant-menu-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined,
+.restaurant-map-wrapping .icon-p-wrapper .icon-wrapper .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 20;
 }
 
@@ -557,8 +561,7 @@ main {
   line-height: 2rem;
 }
 
-.restaurant-content-wrapping,
-.restaurant-menu-wrapping {
+.restaurant-map-wrapping {
   border-bottom: none;
 }
 

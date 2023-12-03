@@ -53,7 +53,7 @@ const Submission = () => {
                     type="text"
                     class="form-control border-0 bg-light"
                     id="partySize"
-                    value={"2 People"}
+                    value={reservation.guests}
                     disabled
                   />
                 </div>
@@ -67,7 +67,7 @@ const Submission = () => {
                     type="text"
                     class="form-control border-0 bg-light"
                     id="ReservationDate"
-                    value={"2023-12-15"}
+                    value={formattedDate}
                     disabled
                   />
                 </div>
@@ -81,7 +81,7 @@ const Submission = () => {
                     type="text"
                     class="form-control border-0 bg-light"
                     id="ReservationTime"
-                    value={"11:00 AM"}
+                    value={formattedTime}
                     disabled
                   />
                 </div>
@@ -91,7 +91,13 @@ const Submission = () => {
                   Table
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control border-0 bg-light" id="table" value={"A2"} disabled />
+                  <input
+                    type="text"
+                    class="form-control border-0 bg-light"
+                    id="table"
+                    value={reservation.table_name}
+                    disabled
+                  />
                 </div>
               </div>
               <div class="row mb-3">
@@ -103,7 +109,7 @@ const Submission = () => {
                     type="text"
                     class="form-control border-0 bg-light"
                     id="name"
-                    value={"Full Name Here"}
+                    value={reservation.firstname + " " + reservation.lastname}
                     disabled
                   />
                 </div>
@@ -117,7 +123,7 @@ const Submission = () => {
                     type="text"
                     class="form-control border-0 bg-light"
                     id="phone"
-                    value={"111-222-3333"}
+                    value={reservation.phone}
                     disabled
                   />
                 </div>
@@ -131,7 +137,7 @@ const Submission = () => {
                     type="email"
                     class="form-control border-0 bg-light"
                     id="email"
-                    value={"123@gmail.com"}
+                    value={reservation.email}
                     disabled
                   />
                 </div>
@@ -141,7 +147,13 @@ const Submission = () => {
                   Note
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control border-0 bg-light" id="note" value={"Note..."} disabled />
+                  <input
+                    type="text"
+                    class="form-control border-0 bg-light"
+                    id="note"
+                    value={reservation.note ? reservation.note : ""}
+                    disabled
+                  />
                 </div>
               </div>
             </form>

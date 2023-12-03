@@ -1,6 +1,7 @@
 .restaurant-info-wrapping,
 .restaurant-content-wrapping,
-.restaurant-menu-wrapping {
+.restaurant-menu-wrapping,
+.restaurant-map-wrapping {
   display: flex;
   gap: 1rem;
   flex-direction: column;
@@ -35,7 +36,6 @@
   line-height: 2rem;
 }
 
-.restaurant-content-wrapping,
-.restaurant-menu-wrapping {
+.restaurant-map-wrapping {
   border-bottom: none;
 }

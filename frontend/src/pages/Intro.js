@@ -8,6 +8,7 @@ import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 import InfoMobile from "../components/InfoMobile.js";
 import Description from "../components/Description.js";
+import Map from "../components/Map.js"; // Google Map
 
 const Intro = () => {
   const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // can only select date from tomorrow
@@ -26,6 +27,9 @@ const Intro = () => {
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   console.log(filteredTables);
 
+  // Google Map
+  const [mapCenter, setMapCenter] = useState(null);
+
   // Redux
   const dispatch = useDispatch();
   const restaurants = useSelector((state) => state.restaurants.entities);
@@ -42,6 +46,10 @@ const Intro = () => {
     if (restaurantsStatus === "succeeded") {
       const foundRestaurant = restaurants.find((r) => r._id === restaurantId);
       setRestaurant(foundRestaurant);
+      setMapCenter({
+        lat: 43.39030604653554,
+        lng: -80.40545872884768,
+      });
     }
   }, [restaurantsStatus, dispatch, restaurantId, restaurants]);
 
@@ -218,11 +226,18 @@ const Intro = () => {
             </div>
           </section>
           {/* Menu */}
-          {/* <section className="restaurant-menu">
+          <section className="restaurant-menu">
             <div className="restaurant-menu-wrapping">
               <h2>Menu</h2>
             </div>
-          </section> */}
+          </section>
+          {/* Map */}
+          <section className="restaurant-map">
+            <div className="restaurant-map-wrapping">
+              <h2>Map</h2>
+              <Map center={mapCenter} zoom={15} />
+            </div>
+          </section>
         </div>
         {/* Side Bar */}
         <div className="sidebar">
