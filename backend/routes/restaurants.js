@@ -10,6 +10,7 @@ router.get("/create-restaurant-1", async (req, res) => {
     type: "Gastro Pub, Canadian, Burgers",
     payments: "Credit Card, Mastercard, UnionPay via TheFork Pay, Visa",
     address: "45 King St W, Kitchener, ON N2G 1A1",
+    location: { latitude: 43.389511, longitude: -80.404778 },
     phone: "(519) 208-8555",
     description: [
       "With a unique, inventive menu, The Rich Uncle Tavern is built on hearty live-fire fare and shareable snacks that pay homage to the brasseries and taverns of yesteryear. Defined by our humble and wholesome approach to food and beverage, The Rich Uncle Tavern features a charming and homely ambience for patrons to gather with old friends and find some new ones.",
@@ -86,6 +87,7 @@ router.get("/create-restaurant-2", async (req, res) => {
     type: "Steakhouse, Steak, Seafood",
     payments: "AMEX, Mastercard, Visa",
     address: "31 Pioneer Tower Crescent, Kitchener, ON N2P 2L2",
+    location: { latitude: 43.469761, longitude: -80.538811 },
     phone: "(520) 200-5555",
     description: [
       "Hamilton's Premier Steakhouse at the corner of Locke and King. Enjoy exquisite dining in a setting purposefully designed to highlight the character of its past. Superior quality craft Steaks, luxurious Japanese Wagyu and Seafood highlight the menu offerings with creative cocktails and carefully chosen wines, served with warm and genuine hospitality. Suitable for cocktails in the lounge, or a full dining experience with a private room available.",
@@ -146,6 +148,7 @@ router.get("/create-restaurant-3", async (req, res) => {
     type: "Pub, Brewery, Pizza Bar",
     payments: "AMEX, Mastercard, Visa",
     address: "223 Erb St. W, Waterloo, ON N2L 0B3",
+    location: { latitude: 43.527481, longitude: -80.223099 },
     phone: "(500) 111-5252",
     description: [
       "Crowsfoot Restaurant is located in the small farming community of Conestogo, Ontario and stands on what is known to be one of the oldest venue sites in the region. Settled by Mennonites and German immigrants in the 1820s, the site has has a continued tradition of serving great food in a comfortable and welcoming atmosphere.",
@@ -208,6 +211,7 @@ router.get("/create-restaurant-4", async (req, res) => {
     type: "Italian",
     payments: "AMEX, Mastercard, Visa",
     address: "340 Hagey Blvd, Waterloo, ON N2L 6R6",
+    location: { latitude: 43.661369, longitude: -79.396263 },
     phone: "(425) 667-8267",
     description: [
       "We thank you for booking at Dels!",

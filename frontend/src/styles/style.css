@@ -563,6 +563,11 @@ main {
 
 .restaurant-map-wrapping {
   border-bottom: none;
+  padding: 1.5rem 0.5rem 0;
+}
+
+.restaurant-map-style {
+  height: 400px;
 }
 
 /* Use a Flexbox to make the Palette/Diagram responsive */
@@ -609,7 +614,7 @@ main {
   border: 1px solid #000;
 }
 
-.restaurant-info-wrapping {
+.restaurant-info-wrapping-submission {
   padding: 0 0.5rem 1.5rem;
 }
 

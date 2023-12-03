@@ -31,6 +31,10 @@ const reservationSchema = new Schema(
       type: String,
       trim: true,
     },
+    guests: {
+      type: Number,
+      required: true,
+    },
     restaurant_id: {
       type: Schema.Types.ObjectId,
       ref: "Restaurant",

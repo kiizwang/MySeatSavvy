@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mui/material";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import { useSelector, useDispatch } from "react-redux";
+import InfoMobile from "../components/InfoMobile.js";
 import Hours from "../components/Hours.js";
 import {
   Divider,
@@ -12,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Box, style } from "@mui/system";
+import { Box, color, style } from "@mui/system";
 import { faCcMastercard } from "@fortawesome/free-brands-svg-icons/faCcMastercard";
 import {
   faPhone,
@@ -43,11 +44,16 @@ const Diner = () => {
   const partySizeParam = queryParams.get('partySize');
   const dateParam = queryParams.get('date');
   const timeParam = queryParams.get('time');
+
   // Format date and time
   const dateTimeString = `${dateParam} ${timeParam}`; // Concatenate the date and time strings to form a complete datetime string
   const parsedDateTime = moment(dateTimeString, 'YYYY-MM-DD HH:mm');  // Create a moment object by parsing the datetime string
   const formattedDateTime = parsedDateTime.format('hh:mmA, ddd D MMM YYYY');  // Format the parsed datetime as required (including AM/PM for time)
   const selectedTable = queryParams.get("selected_table")
+  const selectedRestaurant = queryParams.get('restaurantId')
+  const restaurant = restaurants.filter((key) => key._id == selectedRestaurant)[0]
+
+
   //State management of reservation details
   const [reservationDetails, setReservationDetails] = useState({
     firstName: "",
@@ -96,11 +102,12 @@ const Diner = () => {
     color: "#000000",
   };
 
-  const makePayment = async()=>{
+  const makePayment = async(id, restaurantId)=>{
     const stripe = await loadStripe("pk_test_51O9u29GxPIHOFN70nBDCTbDystrGdqqaUo0Z6QIva1wU8RbuDa6LO2xmF2MuPkztNBCSWW3HiANCezaH5HQSryd2008cPqwEm6");
 
     const body = {
-        details: reservationDetails
+       reservationId : id,
+       restaurantId : restaurantId
     }
     const headers = {
         "Content-Type":"application/json"
@@ -116,7 +123,7 @@ const Diner = () => {
     const result = stripe.redirectToCheckout({
         sessionId:session.id
     });
-    
+
     if(result.error){
         console.log(result.error);
     }
@@ -131,18 +138,20 @@ const Diner = () => {
           lastname: reservationDetails.lastName,
           email: reservationDetails.email,
           phone: reservationDetails.phoneNumber,
+          guests: Number(partySizeParam),
           note: reservationDetails.specialRequest,
           date: dateParam || Date(),
           time: timeParam,
-          restaurant_id: restaurants[0]._id,
+          restaurant_id: restaurant._id,
           table_id: selectedTable
         }),
       };
       fetch("http://localhost:4000/reservations", requestOptions)
-        .then((response) => response.json())
+        .then((response) => {
+          return response.json()})
         .then((data) => {
-          console.log(data);
-          makePayment();
+          sessionStorage.setItem("reservationId", data._id);
+           makePayment(data._id, restaurant._id);
         });
     }
   };
@@ -155,49 +164,49 @@ const Diner = () => {
   return (
     <main>
       <div className="main">
-        <Banner
-          bannerImage={
-            restaurants.length > 0 ? restaurants[0].banner_image : ""
-          }
-        />
+        <Banner bannerImage={restaurants.length > 0 ? restaurant.banner_image : ""} />
         <div className="content">
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography variant="h3" fontWeight="600">
-              {" "}
-              {restaurants.length > 0 ? restaurants[0].name : "Loading..."}
-            </Typography>
-            <Box display="flex" alignItems="center">
+            <h1>{restaurant ? restaurant.name : "Loading..."}</h1>
+
+            <div className="restaurant-info-wrapping">
+              <div className="icon-p-wrapper">
+                <div className="icon-wrapper">
+                  <span className="material-icons-outlined material-symbols-outlined">face</span>
+                </div>
+                <p>{`${partySizeParam} Adults`}</p>
+              </div>
+              <div className="icon-p-wrapper">
+                <div className="icon-wrapper">
+                  <span className="material-icons-outlined material-symbols-outlined">calendar_month</span>
+                </div>
+                <p>{`${formattedDateTime}`}</p>
+              </div>
+            </div>
+
+            {/* <Box display="flex" alignItems="center">
               <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                 <FontAwesomeIcon icon={faUtensils} />
               </IconButton>
-              <Typography>{`${partySizeParam} Adults`} </Typography>
+              <h6>{`${partySizeParam} Adults`} </h6>
             </Box>
             <Box display="flex" alignItems="center">
               <IconButton sx={{ mr: "16px" }} disableFocusRipple>
                 <FontAwesomeIcon icon={faClock} />
               </IconButton>
-              <Typography>{`${formattedDateTime}`}</Typography>
+              <h6>{`${formattedDateTime}`}</h6>
             </Box>
-            <Divider />
-            <Typography
-              variant="h4"
-              fontWeight="600"
-              style={{ paddingTop: "8px" }}
-            >
-              Dinner Details
-            </Typography>
+            <Divider /> */}
+            <br></br>
+            <h2>Dinner Details</h2>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   required
-                  error={
-                    !validateName(reservationDetails.firstName) &&
-                    reservationDetails.firstName.length > 0
-                  }
+                  error={!validateName(reservationDetails.firstName) && reservationDetails.firstName.length > 0}
                   helperText={
-                    !validateName(reservationDetails.firstName) &&
-                    reservationDetails.firstName.length > 0
+                    !validateName(reservationDetails.firstName) && reservationDetails.firstName.length > 0
                       ? "Please Enter valid First Name"
                       : ""
                   }
@@ -216,13 +225,9 @@ const Diner = () => {
                 <TextField
                   fullWidth
                   required
-                  error={
-                    !validateName(reservationDetails.lastName) &&
-                    reservationDetails.lastName.length > 0
-                  }
+                  error={!validateName(reservationDetails.lastName) && reservationDetails.lastName.length > 0}
                   helperText={
-                    !validateName(reservationDetails.lastName) &&
-                    reservationDetails.lastName.length > 0
+                    !validateName(reservationDetails.lastName) && reservationDetails.lastName.length > 0
                       ? "Please Enter valid Last Name"
                       : ""
                   }
@@ -244,12 +249,10 @@ const Diner = () => {
                   fullWidth
                   required
                   error={
-                    !validatePhoneNumber(reservationDetails.phoneNumber) &&
-                    reservationDetails.phoneNumber.length > 0
+                    !validatePhoneNumber(reservationDetails.phoneNumber) && reservationDetails.phoneNumber.length > 0
                   }
                   helperText={
-                    !validatePhoneNumber(reservationDetails.phoneNumber) &&
-                    reservationDetails.phoneNumber.length > 0
+                    !validatePhoneNumber(reservationDetails.phoneNumber) && reservationDetails.phoneNumber.length > 0
                       ? "Please enter valid Phone Number"
                       : ""
                   }
@@ -268,13 +271,9 @@ const Diner = () => {
                 <TextField
                   fullWidth
                   required
-                  error={
-                    !validateEmail(reservationDetails.email) &&
-                    reservationDetails.email.length > 0
-                  }
+                  error={!validateEmail(reservationDetails.email) && reservationDetails.email.length > 0}
                   helperText={
-                    !validateEmail(reservationDetails.email) &&
-                    reservationDetails.email.length > 0
+                    !validateEmail(reservationDetails.email) && reservationDetails.email.length > 0
                       ? "Please Enter valid Email"
                       : ""
                   }
@@ -307,9 +306,7 @@ const Diner = () => {
                 />
               </Grid>
             </Grid>
-            <Typography fontSize={18} fontWeight={500} paddingTop={1} paddingLeft={2} color={"green"}>
-                Payment of 20CAD is required to complete reservation of table.
-            </Typography>
+            <h6 style={{ color: "green" }}> Payment of 20CAD is required to complete reservation of table.</h6>
             <Button
               disabled={!disableSubmitButton}
               onClick={submitReservations}
@@ -319,67 +316,52 @@ const Diner = () => {
             >
               Pay 20CAD
             </Button>
-            <Button
-              variant="contained"
-              sx={{ marginTop: "16px" }}
-              style={customBackButtonStyle}
-              onClick={handleBack}
-            >
+            <Button variant="contained" sx={{ marginTop: "16px" }} style={customBackButtonStyle} onClick={handleBack}>
               Back
             </Button>
           </Box>
         </div>
         <div className="sidebar">
           <div className="content">
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography align="center" variant="h5" fontWeight="600">
-                {" "}
-                Restaurant Information
-              </Typography>
+            <section className="restaurant-info">
+              <h3 className="text-center">Restaurant Information</h3>
               <br></br>
-              <Box display="flex" alignItems="left">
-                <IconButton sx={{ mr: "16px" }} disableFocusRipple>
-                  <FontAwesomeIcon icon={faUtensils} />
-                </IconButton>
-                <Typography paddingTop={1}>
-                  {" "}
-                  {restaurants.length > 0 ? restaurants[0].type : "Loading..."}
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="left">
-                <IconButton sx={{ mr: "16px" }} disableFocusRipple>
-                  <FontAwesomeIcon icon={faCcMastercard} />
-                </IconButton>
-                <Typography paddingTop={1}>
-                  {restaurants.length > 0
-                    ? restaurants[0].payments
-                    : "Loading..."}
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="left">
-                <IconButton sx={{ mr: "16px" }} disableFocusRipple>
-                  <FontAwesomeIcon icon={faLocationDot} />
-                </IconButton>
-                <Typography paddingTop={1}>
-                  {restaurants.length > 0
-                    ? restaurants[0].address
-                    : "Loading..."}
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="left">
-                <IconButton sx={{ mr: "16px" }} disableFocusRipple>
-                  <FontAwesomeIcon icon={faPhone} />
-                </IconButton>
-                <Typography paddingTop={1}>
-                  {restaurants.length > 0 ? restaurants[0].phone : "Loading..."}
-                </Typography>
-              </Box>
-            </Box>
+              <div className="restaurant-info-wrapping">
+                <div className="icon-p-wrapper">
+                  <div className="icon-wrapper">
+                    <span className="material-icons-outlined material-symbols-outlined">restaurant</span>
+                  </div>
+                  <span>{restaurant ? restaurant.type : "Loading..."}</span>
+                </div>
+                <div className="icon-p-wrapper">
+                  <div className="icon-wrapper">
+                    <span className="material-icons-outlined material-symbols-outlined">payments</span>
+                  </div>
+                  <span>{restaurant ? restaurant.payments : "Loading..."}</span>
+                </div>
+                <div className="icon-p-wrapper">
+                  <div className="icon-wrapper">
+                    <span className="material-icons-outlined material-symbols-outlined">storefront</span>
+                  </div>
+                  <span>
+                    {restaurant ? restaurant.address : "Loading..."} <a href="#">View Map</a>
+                  </span>
+                </div>
+                <div className="icon-p-wrapper">
+                  <div className="icon-wrapper">
+                    <span className="material-icons-outlined material-symbols-outlined">call</span>
+                  </div>
+                  <span>
+                    <a href="#">{restaurant ? restaurant.phone : "Loading..."}</a>
+                  </span>
+                </div>
+              </div>
+            </section>
             <br></br>
             <Divider />
             <br></br>
             <div className="content">
-              <Hours restaurants={restaurants} />
+              <Hours restaurant={restaurant} />
             </div>
           </div>
         </div>

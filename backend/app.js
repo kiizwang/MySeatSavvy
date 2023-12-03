@@ -45,13 +45,15 @@ app.post("/payment", async (req, res) => {
       quantity: 1,
     },
   ];
+  const reservationId = req.body.reservationId;
+  const restaurantId = req.body.restaurantId;
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: lineItems,
     mode: "payment",
-    success_url: "http://localhost:3000/submission",
-    cancel_url: "http://localhost:3000/about",
+    success_url: `http://localhost:3000/submission?restaurantId=${restaurantId}&reservationId=${reservationId}`,
+    cancel_url: "http://localhost:3000",
   });
 
   res.json({ id: session.id });

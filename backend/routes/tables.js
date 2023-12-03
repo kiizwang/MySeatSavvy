@@ -18,11 +18,11 @@ router.get("/table-sample-create", async (req, res) => {
       },
       booked_date_time: [
         {
-          booked_date: moment.tz("2023-11-13", torontoTimeZone),
+          booked_date: moment.tz("2023-12-14", torontoTimeZone),
           booked_time_slots: ["11:00", "12:00"],
         },
       ],
-      restaurant_id: new mongoose.Types.ObjectId("65511ae91afd8462ae0877a2"),
+      restaurant_id: new mongoose.Types.ObjectId("656bfa5f1200b4393841cdbb"),
       reservation_id: null,
     },
     {
@@ -33,11 +33,11 @@ router.get("/table-sample-create", async (req, res) => {
       },
       booked_date_time: [
         {
-          booked_date: moment.tz("2023-11-13", torontoTimeZone),
+          booked_date: moment.tz("2023-12-14", torontoTimeZone),
           booked_time_slots: ["11:00", "12:00", "13:00"],
         },
       ],
-      restaurant_id: new mongoose.Types.ObjectId("65511ae91afd8462ae0877a2"),
+      restaurant_id: new mongoose.Types.ObjectId("656bfa5f1200b4393841cdbb"),
       reservation_id: null,
     },
     {
@@ -48,11 +48,56 @@ router.get("/table-sample-create", async (req, res) => {
       },
       booked_date_time: [
         {
-          booked_date: moment.tz("2023-11-13", torontoTimeZone),
+          booked_date: moment.tz("2023-12-14", torontoTimeZone),
           booked_time_slots: ["11:00", "12:00", "13:00", "14:00", "17:30", "18:30", "19:30", "20:30", "21:30"],
         },
       ],
-      restaurant_id: new mongoose.Types.ObjectId("65511ae91afd8462ae0877a2"),
+      restaurant_id: new mongoose.Types.ObjectId("656bfa5f1200b4393841cdbb"),
+      reservation_id: null,
+    },
+    {
+      table_name: "A4",
+      table_capacity: {
+        min: 2,
+        max: 4,
+      },
+      booked_date_time: [
+        {
+          booked_date: moment.tz("2023-12-14", torontoTimeZone),
+          booked_time_slots: ["11:00", "12:00", "14:00", "17:30", "18:30", "19:30", "20:30", "21:30"],
+        },
+      ],
+      restaurant_id: new mongoose.Types.ObjectId("656bfa5f1200b4393841cdbb"),
+      reservation_id: null,
+    },
+    {
+      table_name: "A5",
+      table_capacity: {
+        min: 3,
+        max: 5,
+      },
+      booked_date_time: [
+        {
+          booked_date: moment.tz("2023-12-14", torontoTimeZone),
+          booked_time_slots: ["11:00", "12:00", "13:00", "14:00", "17:30", "18:30", "19:30", "20:30", "21:30"],
+        },
+      ],
+      restaurant_id: new mongoose.Types.ObjectId("656bfa5f1200b4393841cdbb"),
+      reservation_id: null,
+    },
+    {
+      table_name: "A6",
+      table_capacity: {
+        min: 4,
+        max: 8,
+      },
+      booked_date_time: [
+        {
+          booked_date: moment.tz("2023-12-14", torontoTimeZone),
+          booked_time_slots: ["17:30", "18:30", "19:30", "20:30", "21:30"],
+        },
+      ],
+      restaurant_id: new mongoose.Types.ObjectId("656bfa5f1200b4393841cdbb"),
       reservation_id: null,
     },
   ];

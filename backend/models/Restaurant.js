@@ -12,6 +12,17 @@ const timeSlotSchema = new Schema({
   },
 });
 
+const locationSchema = new Schema({
+  latitude: {
+    type: Number,
+    required: true,
+  },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+});
+
 const restaurantSchema = new Schema(
   {
     name: {
@@ -30,6 +41,7 @@ const restaurantSchema = new Schema(
       type: String,
       required: true,
     },
+    location: locationSchema,
     phone: {
       type: String,
       required: true,

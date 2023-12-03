@@ -8,7 +8,7 @@ import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 import InfoMobile from "../components/InfoMobile.js";
 import Description from "../components/Description.js";
-import Map from "../components/Map.js"; // Google Map
+import Map from "../components/Map.js";
 
 const Intro = () => {
   const tomorrow = moment().add(1, "days").format("YYYY-MM-DD"); // can only select date from tomorrow
@@ -29,6 +29,10 @@ const Intro = () => {
 
   // Google Map
   const [mapCenter, setMapCenter] = useState(null);
+  const mapStyle = {
+    width: "100%",
+    height: "400px",
+  };
 
   // Redux
   const dispatch = useDispatch();
@@ -47,9 +51,17 @@ const Intro = () => {
       const foundRestaurant = restaurants.find((r) => r._id === restaurantId);
       setRestaurant(foundRestaurant);
       setMapCenter({
-        lat: 43.39030604653554,
-        lng: -80.40545872884768,
+        center: { lat: foundRestaurant.location.latitude, lng: foundRestaurant.location.longitude },
+        zoom: 15,
+        markers: [{ position: { lat: foundRestaurant.location.latitude, lng: foundRestaurant.location.longitude } }],
+        style: "restaurant-map-style",
       });
+      // setMapCenter({
+      //   center: { lat: 43.391465797134344, lng: -80.40551535423039 },
+      //   zoom: 15,
+      //   markers: [{ position: { lat: 43.391465797134344, lng: -80.40551535423039 } }],
+      //   style: "restaurant-map-style",
+      // });
     }
   }, [restaurantsStatus, dispatch, restaurantId, restaurants]);
 
@@ -235,7 +247,7 @@ const Intro = () => {
           <section className="restaurant-map">
             <div className="restaurant-map-wrapping">
               <h2>Map</h2>
-              <Map center={mapCenter} zoom={15} />
+              <Map {...mapCenter} mapStyle={mapStyle} />
             </div>
           </section>
         </div>

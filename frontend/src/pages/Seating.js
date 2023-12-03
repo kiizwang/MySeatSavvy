@@ -1,24 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRestaurants } from "../store/restaurantsSlice.js";
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import moment from "moment";
 import go, {SpecialDraggingTool} from 'gojs';
 import Banner from "../components/Banner.js";
-import Hours from "../components/Hours.js";
 
 const Seating = () => {
-  // Redux to fetch Restaurant Data
-  const dispatch = useDispatch();
-  const restaurants = useSelector((state) => state.restaurants.entities);
-  useEffect(() => {
-      dispatch(fetchRestaurants());
-  }, [dispatch]);
 
   // To Get Query Params
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const restaurantId = queryParams.get('restaurantId');
+  const [restaurant, setRestaurant] = useState("");
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+
+  // Redux to fetch Restaurant Data
+  const dispatch = useDispatch();
+  const restaurants = useSelector((state) => state.restaurants.entities);
+  const restaurantsStatus = useSelector((state) => state.restaurants.status);
+  useEffect(() => {
+    if (restaurantsStatus === "idle") {
+      dispatch(fetchRestaurants());
+    }
+    if (restaurantsStatus === "succeeded") {
+      const foundRestaurant = restaurants.find((r) => r._id === restaurantId);
+      setRestaurant(foundRestaurant);
+    }
+  }, [restaurantsStatus, dispatch]);
+
+  // Submit button's status
+  useEffect(() => {
+    // Check if "selectedTable" exists in sessionStorage
+    const storedSelectedTable = JSON.parse(sessionStorage.getItem("selectedTable"));
+    setIsSubmitEnabled(!!(storedSelectedTable && storedSelectedTable.id));
+  }, []);
 
   const partySizeParam = queryParams.get('partySize');
   const dateParam = queryParams.get('date');
@@ -41,7 +57,9 @@ const Seating = () => {
     if (storedSelectedTable && storedSelectedTable.id) {
       const tableSessionId = storedSelectedTable.id;
       // Navigate to the dinner page with the query parameters including the retrieved ID
-      navigate(`/dinner?partySize=${partySizeParam}&date=${dateParam}&time=${timeParam}&selected_table=${tableSessionId}`);
+      navigate(`/dinner?restaurantId=${restaurantId}&partySize=${partySizeParam}&date=${dateParam}&time=${timeParam}&selected_table=${tableSessionId}`);
+      // Remove "selectedTable" from sessionStorage after navigation
+      sessionStorage.removeItem("selectedTable");
     } 
   };
 
@@ -50,11 +68,10 @@ const Seating = () => {
   const guestItems = [{ key: 'Guest', plus: numberOfGuests - 1 }];
 
   const [tableData, setTableData] = useState([]);
-  let nodeDataArray = [];
 
   useEffect(() => {
     //server-side API
-    const apiUrl = 'http://localhost:3000/tables'; // API endpoint
+    const apiUrl = 'http://localhost:4000/tables'; // API endpoint
     fetch(apiUrl)
       .then((response) => {
         if (!response.ok) {
@@ -70,32 +87,37 @@ const Seating = () => {
         const tablesPerRow = 3; // Number of tables per row
         const rowSpacing = 60; // Space between rows
         const tableSpacing = 30; // Horizontal spacing between tables
-        // const seatSpacing = 30; // Spacing between seats and tables
-        nodeDataArray = data.map((table, index) => {
-          // Show Tables as per the partySize || numberOfGuests
-          if(table.table_capacity.max >= numberOfGuests) {
-            const tableId = table._id;
-            const x = 100 + (index % tablesPerRow) * (tableWidth + tableSpacing);
-            const y = 100 + Math.floor(index / tablesPerRow) * (tableHeight + rowSpacing);
-
-            // Determine the table category based on the max_capacity
-            let category = "TableR4"; // Default to a square table with 4 seats
-            if (table.table_capacity && table.table_capacity.max > 2 && table.table_capacity.max <= 8 ) {
-              category = "TableR"+table.table_capacity.max; // Change to a rectangular/sqaure table with "table_capacity.max" seats
-            }
-
-            // Create data for the table with its specific table ID and category
-            const tableData = {
-              key: `table_${tableId}`,
-              category: category, // Dynamically set the category
-              name: table.table_name,
-              guests: {}, // Initialize with no guests
-              loc: `${x} ${y}`,
-            };
-            // Combine the table and seat data for this specific table
-            return tableData;
+      
+        // Filter and map table data based on condition
+        const nodeDataArray = data
+        .filter(table => {
+          if (numberOfGuests <=4 ) {
+            return table.table_capacity.max >= 2 && table.table_capacity.max <= 4;
+          } else {
+            return table.table_capacity.max >= numberOfGuests;
           }
-        }).filter(Boolean); // Filter out undefined values from the array
+        })
+        .map((table, index) => {
+          const tableId = table._id;
+          const x = 100 + (index % tablesPerRow) * (tableWidth + tableSpacing);
+          const y = 100 + Math.floor(index / tablesPerRow) * (tableHeight + rowSpacing);
+
+          // Determine the table category based on the max_capacity
+          let category = "TableR4"; // Default to a square table with 4 seats
+          if (table.table_capacity && table.table_capacity.max > 2 && table.table_capacity.max <= 8 ) {
+            category = `TableR${table.table_capacity.max}`; // Change to a rectangular/square table with "table_capacity.max" seats
+          }
+
+          // Create data for the table with its specific tableId and category
+          const tableData = {
+            key: `table_${tableId}`,
+            category: category,
+            name: table.table_name,
+            guests: {}, // Initialize with no guests
+            loc: `${x} ${y}`,
+          };
+          return tableData;
+        });
         // Check if myDiagramRef is already initialized
         if (!myDiagramRef.current) {
           // Call the init function with the reference to myDiagramRef
@@ -196,10 +218,10 @@ const Seating = () => {
                 assignPeopleToSeats(node, node.diagram.selection, e.documentPoint);
               }
             },
-            $(go.Shape, "Rectangle", { fill: "blanchedalmond", stroke: null }),
+            $(go.Shape, "RoundedRectangle", { name: "guestsRoundedRect", width: 55, height: 25, fill: "#FFD604", stroke: null, parameter1: 4  }),
             $(go.Panel, "Viewbox",
-              { desiredSize: new go.Size(50, 38) },
-              $(go.TextBlock, { margin: 2, desiredSize: new go.Size(55, NaN), font: "8pt Verdana, sans-serif", textAlign: "center", stroke: "darkblue" },
+              { desiredSize: new go.Size(47, 40) },
+              $(go.TextBlock, { name: "guestsTextBlock", margin: 1, desiredSize: new go.Size(55, NaN), font: "bold 8pt Verdana, sans-serif", textAlign: "center", stroke: "#000000" },
                 new go.Binding("text", "", data => {
                   let s = data.key;
                   if (data.plus) s += " +" + data.plus.toString();
@@ -215,14 +237,23 @@ const Seating = () => {
           if (typeof focus === 'string') focus = go.Spot.parse(focus);
           if (!focus || !focus.isSpot()) focus = align.opposite();
           return $(go.Panel, "Spot",
-            { name: number.toString(), alignment: align, alignmentFocus: focus },
-            $(go.Shape, "Circle",
-              { name: "SEATSHAPE", desiredSize: new go.Size(30, 30), fill: "silver", stroke: "white", strokeWidth: 2},
-              new go.Binding("fill")),
-            $(go.TextBlock, number.toString(),
-              { font: "10pt Verdana, sans-serif" },
-              {name: table},
-              new go.Binding("angle", "angle", n => -n))
+            {
+              name: number.toString(),
+              alignment: align,
+              alignmentFocus: focus,
+              padding: new go.Margin(5, 8) // Padding for space around the seat
+            },
+            $(go.Shape, "Rectangle",
+            {
+              name: "SEATSHAPE",
+              desiredSize: new go.Size(25, 8),
+              fill: "none",
+              stroke: "#FFD604",
+              strokeWidth: 1,
+              // Adjust corner radius
+              geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"
+            },
+              new go.Binding("fill"))
           );
         }
 
@@ -253,10 +284,12 @@ const Seating = () => {
           $(go.Node, "Spot", tableStyle(),
             $(go.Panel, "Spot",
               $(go.Shape, "Rectangle",
-                { name: "TABLESHAPE", desiredSize: new go.Size(160, 60), fill: "silver", stroke: null },
+                { name: "TABLESHAPE", desiredSize: new go.Size(160, 60), fill: "#1B1A1F", stroke: "#FFD604",
+                // Adjust corner radius 
+                geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"},
                 new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
                 new go.Binding("fill")),
-              $(go.TextBlock, { editable: true, font: "bold 11pt Verdana, sans-serif" },
+              $(go.TextBlock, { name: "TextBlock", editable: true, font: "bold 11pt Verdana, sans-serif", stroke: "#FFFFFF" },
                 new go.Binding("text", "name").makeTwoWay(),
                 new go.Binding("angle", "angle", n => -n))
             ),
@@ -268,28 +301,32 @@ const Seating = () => {
         myDiagram.nodeTemplateMap.add("TableR4",  // square with 4 seats
           $(go.Node, "Spot", tableStyle(),
             $(go.Panel, "Spot",
-              $(go.Shape, "Square",
-                { name: "TABLESHAPE", desiredSize: new go.Size(70, 70), fill: "silver", stroke: null },
+              $(go.Shape, "Rectangle",
+                { name: "TABLESHAPE", desiredSize: new go.Size(70, 70), fill: "#1B1A1F", stroke: "#FFD604",
+                // Adjust corner radius
+                geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"},
                 new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
                 new go.Binding("fill")),
-              $(go.TextBlock, { editable: true, font: "bold 8pt Verdana, sans-serif" },
+              $(go.TextBlock, { name: "TextBlock", editable: true, font: "bold 8pt Verdana, sans-serif", stroke: "#FFFFFF" },
                 new go.Binding("text", "name").makeTwoWay(),
                 new go.Binding("angle", "angle", n => -n))
             ),
             Seat(1, "0.25 0", "0.5 1", "TableR4"),
             Seat(2, "0.72 0", "0.5 1", "TableR4"),
-            Seat(3, "0.25 1.38", "0.5 0.8","TableR4"),
-            Seat(4, "0.72 1.38", "0.5 0.8", "TableR4")
+            Seat(3, "0.25 1.20", "0.5 0.8","TableR4"),
+            Seat(4, "0.72 1.20", "0.5 0.8", "TableR4")
           ));
 
         myDiagram.nodeTemplateMap.add("TableR5",  // rectangular with 5 seats
           $(go.Node, "Spot", tableStyle(),
             $(go.Panel, "Spot",
               $(go.Shape, "Rectangle",
-                { name: "TABLESHAPE", desiredSize: new go.Size(160, 80), fill: "silver", stroke: null },
+                { name: "TABLESHAPE", desiredSize: new go.Size(150, 70), fill: "#1B1A1F", stroke: "#FFD604",
+                // Adjust corner radius 
+                geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"},
                 new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
                 new go.Binding("fill")),
-              $(go.TextBlock, { editable: true, font: "bold 11pt Verdana, sans-serif" },
+              $(go.TextBlock, { name: "TextBlock", editable: true, font: "bold 11pt Verdana, sans-serif", stroke: "#FFFFFF" },
                 new go.Binding("text", "name").makeTwoWay(),
                 new go.Binding("angle", "angle", n => -n))
             ),
@@ -304,10 +341,12 @@ const Seating = () => {
         $(go.Node, "Spot", tableStyle(),
           $(go.Panel, "Spot",
             $(go.Shape, "Rectangle",
-              { name: "TABLESHAPE", desiredSize: new go.Size(160, 80), fill: "silver", stroke: null },
+              { name: "TABLESHAPE", desiredSize: new go.Size(150, 70), fill: "#1B1A1F", stroke: "#FFD604",
+              // Adjust corner radius 
+              geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"},
               new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
               new go.Binding("fill")),
-            $(go.TextBlock, { editable: true, font: "bold 11pt Verdana, sans-serif" },
+            $(go.TextBlock, { name: "TextBlock", editable: true, font: "bold 11pt Verdana, sans-serif", stroke: "#FFFFFF" },
               new go.Binding("text", "name").makeTwoWay(),
               new go.Binding("angle", "angle", n => -n))
           ),
@@ -323,10 +362,12 @@ const Seating = () => {
           $(go.Node, "Spot", tableStyle(),
             $(go.Panel, "Spot",
             $(go.Shape, "Rectangle",
-              { name: "TABLESHAPE", desiredSize: new go.Size(160, 80), fill: "silver", stroke: null },
+              { name: "TABLESHAPE", desiredSize: new go.Size(150, 70), fill: "#1B1A1F", stroke: "#FFD604",
+              // Adjust corner radius 
+              geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"},
               new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
               new go.Binding("fill")),
-            $(go.TextBlock, { editable: true, font: "bold 11pt Verdana, sans-serif" },
+            $(go.TextBlock, { name: "TextBlock", editable: true, font: "bold 11pt Verdana, sans-serif", stroke: "#FFFFFF" },
               new go.Binding("text", "name").makeTwoWay(),
               new go.Binding("angle", "angle", n => -n))
             ),
@@ -344,10 +385,12 @@ const Seating = () => {
           $(go.Node, "Spot", tableStyle(),
             $(go.Panel, "Spot",
               $(go.Shape, "Rectangle",
-                { name: "TABLESHAPE", desiredSize: new go.Size(160, 80), fill: "silver", stroke: null },
+                { name: "TABLESHAPE", desiredSize: new go.Size(150, 70), fill: "#1B1A1F", stroke: "#FFD604",
+                // Adjust corner radius
+                geometryString: "M0,2.5 Q0,0 2.5,0 L27.5,0 Q30,0 30,2.5 L30,7.5 Q30,10 27.5,10 L2.5,10 Q0,10 0,7.5 Z"},
                 new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
                 new go.Binding("fill")),
-              $(go.TextBlock, { editable: true, font: "bold 11pt Verdana, sans-serif" },
+              $(go.TextBlock, { name: "TextBlock", editable: true, font: "bold 11pt Verdana, sans-serif", stroke: "#FFFFFF" },
                 new go.Binding("text", "name").makeTwoWay(),
                 new go.Binding("angle", "angle", n => -n))
             ),
@@ -439,9 +482,6 @@ const Seating = () => {
         );
         return myDiagram;
       } // end init
-       // Call the init function with the reference to myDiagramRef
-      //  const myDiagram = init();
-      //  myDiagramRef.current = myDiagram;
 
       function isPerson(n) { return n !== null && n.category === ""; }
 
@@ -523,6 +563,9 @@ const Seating = () => {
         }
         // Session Storage for Selected Table
         sessionStorage.setItem("selectedTable", JSON.stringify(selectedTable));
+
+        // Update isSubmitEnabled state
+        setIsSubmitEnabled(true);
 
         // iterate over all seats in the Node to find one that is not occupied
         const closestseatname = findClosestUnoccupiedSeat(node, pt);
@@ -612,6 +655,23 @@ const Seating = () => {
         }
       }
 
+      // Find the table node by its unique ID (tableId)
+      function findTableNodeById(tableId) {
+        const diagram = myDiagramRef.current; // Reference to diagram
+        let tableNode = null;
+
+        // Iterate through each node in the diagram
+        diagram.nodes.each((node) => {
+          // Check if the node key matches the specified tableId
+          if (node.data && node.data.key === `${tableId}`) {
+            tableNode = node; // Found the table node with the specified tableId
+            return false; // Exit the iteration loop
+          }
+        });
+
+        return tableNode; // Return the found table node or null if not found
+      }
+
       // Position a single guest Node to be at the location of the seat to which they are assigned.
       // Position a single guest Node to be at the location of the seat to which they are assigned.
       function positionPersonAtSeat(guest) {
@@ -622,9 +682,44 @@ const Seating = () => {
         const table = diagram.findPartForKey(guest.table);
         const person = diagram.findPartForData(guest);
 
+
         if (table && person) {
           const seat = table.findObject(guest.seat.toString());
           const loc = seat.getDocumentPoint(go.Spot.Center);
+
+          //  For Seats Selected
+          // Access the Selected RoundedRectangle shape inside the node
+          const guestsRoundedRect = person.findObject("guestsRoundedRect");
+          if (guestsRoundedRect) {
+            // Modify width and height of the RoundedRectangle shape
+            diagram.startTransaction('changeGuestsRoundedRect');
+            guestsRoundedRect.width = 25; // Change the width 
+            guestsRoundedRect.height = 8; // Change the height 
+            // Access the TextBlock inside the RoundedRectangle's panel
+            const textBlock = guestsRoundedRect.panel.findObject("guestsTextBlock");  
+            if (textBlock instanceof go.TextBlock) {
+              // Change the color of the text block
+              textBlock.stroke = "#FFD604"; 
+            }
+            diagram.commitTransaction('changeGuestsRoundedRect');
+          }
+
+          // For Table Selected
+          const foundTableNode = findTableNodeById(table.key);
+          if (foundTableNode) {
+            // Modify the found table node 
+            diagram.startTransaction('modifySelectedTable');
+            const tableShape = foundTableNode.findObject("TABLESHAPE"); 
+            if (tableShape instanceof go.Shape) {
+              // tableShape.stroke = "green";
+              // Accessing the TextBlock inside the table node
+              const textBlock = foundTableNode.findObject("TextBlock"); 
+              if (textBlock instanceof go.TextBlock) {
+                textBlock.stroke = "#FFD604"; // Change the text color
+              } 
+            } 
+            diagram.commitTransaction('modifySelectedTable');
+          }
 
           // animate movement, instead of: person.location = loc;
           const animation = new go.Animation();
@@ -647,10 +742,10 @@ const Seating = () => {
   return (
     <main>
       <div className="main main-seating">
-        <Banner bannerImage={restaurants.length > 0 ? restaurants[0].banner_image : ""} />
+        <Banner bannerImage={restaurant ? restaurant.banner_image : ""} />
         <div className="content">
           <section className="seating-info">
-            <h1>{restaurants.length > 0 ? restaurants[0].name : "Loading..."}</h1>
+            <h1>{restaurant ? restaurant.name : "Loading..."}</h1>
             <div className="restaurant-info-wrapping">
               <div className="icon-p-wrapper">
                 <div className="icon-wrapper">
@@ -677,6 +772,8 @@ const Seating = () => {
                     border: "1px solid black",
                     position: "relative",
                     WebkitTapHighlightColor: "rgba(255, 255, 255, 0)",
+                    background: "#1B1A1F 0% 0% no-repeat padding-box",
+                    borderRadius: "8px",
                   }}
                 >
                   <canvas
@@ -705,6 +802,8 @@ const Seating = () => {
                     border: "1px solid black",
                     position: "relative",
                     WebkitTapHighlightColor: "rgba(255, 255, 255, 0)",
+                    background: "#1B1A1F 0% 0% no-repeat padding-box",
+                    borderRadius: "8px",
                   }}
                 >
                   <canvas
@@ -735,16 +834,13 @@ const Seating = () => {
                 <input
                   type="submit"
                   value="Submit"
-                  className={`btn btn-warning btn-seating-submit`}
+                  className={`btn btn-warning btn-seating-submit ${!isSubmitEnabled ? "disabled" : ""}`}
                   onClick={handleSubmit}
                 />
               </div>
             </div>
           </section>
         </div>
-        {/* <div className="sidebar">
-          <Hours restaurants={restaurants} />
-        </div> */}
       </div>
     </main>
   );
