@@ -6,9 +6,6 @@ import { fetchRestaurants } from "../store/restaurantsSlice.js";
 import Banner from "../components/Banner.js";
 import Hours from "../components/Hours.js";
 import Info from "../components/Info.js";
-import {
-  Divider
-} from "@mui/material";
 
 const Submission = () => {
   // http://localhost:3000/submission?restaurantId=<restaurantId>&reservationId=<reservationId>
